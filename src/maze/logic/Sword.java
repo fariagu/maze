@@ -6,14 +6,14 @@ public class Sword extends Point{
 	public Sword(MazeBuilder m) {
 		x = 8;
 		y = 1;
-//		collected = false;
+		collected = false;
 		m.printSword(this);
 	}
 */	
 	public Sword(int x, int y, MazeBuilder m) {
 		this.x = x;
 		this.y = y;
-//		collected = false;
+		collected = false;
 		m.printSword(this);
 	}
 

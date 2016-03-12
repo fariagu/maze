@@ -8,13 +8,13 @@ public class Hero extends Point{
 	private boolean mapCleared=false;
 	private boolean finished=false;
 	private int dir;
-
+/*
 	public Hero(MazeBuilder m) {
 		this.x = 1;
 		this.y = 1;
 		m.printHero(this);
 	}
-
+*/
 	public Hero(int x, int y, MazeBuilder m) {
 		this.x = x;
 		this.y = y;
@@ -45,10 +45,10 @@ public class Hero extends Point{
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
-
+/*
 	public int getDir() {
 		return dir;
-	}
+	}*/
 	public void setDir(int dir) {
 		this.dir = dir;
 	}
@@ -77,7 +77,7 @@ public class Hero extends Point{
 				m.setMaze(x, y, ' ');
 				x--;
 				print(m);
-				finished = true;
+				this.setFinished(true);
 			}
 			break;
 		case 1://down
@@ -94,7 +94,7 @@ public class Hero extends Point{
 				m.setMaze(x, y, ' ');
 				x++;
 				m.printHero(this);
-				finished = true;
+				this.setFinished(true);
 			}
 			break;
 		case 2://left
@@ -112,7 +112,7 @@ public class Hero extends Point{
 				m.setMaze(x, y, ' ');
 				this.y--;
 				m.printHero(this);
-				finished = true;
+				this.setFinished(true);
 			}
 			break;
 		case 3://right
@@ -129,7 +129,7 @@ public class Hero extends Point{
 				m.setMaze(x, y, ' ');
 				y++;
 				m.printHero(this);
-				finished = true;
+				this.setFinished(true);
 			}
 			break;
 		default:

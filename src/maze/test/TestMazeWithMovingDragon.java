@@ -41,12 +41,12 @@ public class TestMazeWithMovingDragon {
 		MazeBuilder maze = new MazeBuilder(m1);
 		//Hero h = new Hero(1, 3, maze);
 		Dragon d = new Dragon(1, 1, maze);
-		int x = d.getX();
+		Point p = new Point(1, 1);
 		
 		boolean dragonMoves = false;
 		while (!dragonMoves) {
 			d.move(maze);
-			if (x != d.getX()){
+			if (p.getX() != d.getX()){
 				dragonMoves = true;
 				
 			}else {
@@ -62,12 +62,12 @@ public class TestMazeWithMovingDragon {
 		MazeBuilder maze = new MazeBuilder(m1);
 		//Hero h = new Hero(1, 3, maze);
 		Dragon d = new Dragon(3, 1, maze);
-		int x = d.getX();
+		Point p = new Point(3, 1);
 		
 		boolean dragonMoves = false;
 		while (!dragonMoves) {
 			d.move(maze);
-			if (x != d.getX()){
+			if (p.getX() != d.getX()){
 				dragonMoves = true;
 				
 			}else {
@@ -83,12 +83,12 @@ public class TestMazeWithMovingDragon {
 		MazeBuilder maze = new MazeBuilder(m2);
 		//Hero h = new Hero(1, 3, maze);
 		Dragon d = new Dragon(1, 1, maze);
-		int y = d.getY();
+		Point p = new Point(1, 1);
 		
 		boolean dragonMoves = false;
 		while (!dragonMoves) {
 			d.move(maze);
-			if (y != d.getY()){
+			if (p.getY() != d.getY()){
 				dragonMoves = true;
 				
 			}else {
@@ -104,12 +104,12 @@ public class TestMazeWithMovingDragon {
 		MazeBuilder maze = new MazeBuilder(m2);
 		//Hero h = new Hero(1, 3, maze);
 		Dragon d = new Dragon(1, 3, maze);
-		int y = d.getY();
+		Point p = new Point(1, 3);
 		
 		boolean dragonMoves = false;
 		while (!dragonMoves) {
 			d.move(maze);
-			if (y != d.getY()){
+			if (p.getY() != d.getY()){
 				dragonMoves = true;
 				
 			}else {
@@ -237,5 +237,81 @@ public class TestMazeWithMovingDragon {
 		}
 		assertEquals(false, h.isAlive());
 		assertEquals(true, d.isAlive());
+	}
+	
+	@Test
+	public void testDragonDieUp() {
+		MazeBuilder maze = new MazeBuilder(m1);
+		Dragon d = new Dragon(1, 1, maze);
+		Hero h = new Hero(3, 1, maze);
+		h.setArmed(true);
+		boolean dragonAlive = true;
+
+		while (dragonAlive) {
+			d.moveOrSleep(maze);
+			d.fight(h, maze);
+			if (!d.isAlive()){
+				dragonAlive = false;
+			}
+		}
+		assertEquals(true, h.isAlive());
+		assertEquals(false, d.isAlive());
+	}
+	
+	@Test
+	public void testDragonDieDown() {
+		MazeBuilder maze = new MazeBuilder(m1);
+		Dragon d = new Dragon(3, 1, maze);
+		Hero h = new Hero(1, 1, maze);
+		h.setArmed(true);
+		boolean dragonAlive = true;
+
+		while (dragonAlive) {
+			d.moveOrSleep(maze);
+			d.fight(h, maze);
+			if (!d.isAlive()){
+				dragonAlive = false;
+			}
+		}
+		assertEquals(true, h.isAlive());
+		assertEquals(false, d.isAlive());
+	}
+	
+	@Test
+	public void testDragonDieLeft() {
+		MazeBuilder maze = new MazeBuilder(m2);
+		Dragon d = new Dragon(1, 1, maze);
+		Hero h = new Hero(1, 3, maze);
+		h.setArmed(true);
+		boolean dragonAlive = true;
+
+		while (dragonAlive) {
+			d.moveOrSleep(maze);
+			d.fight(h, maze);
+			if (!d.isAlive()){
+				dragonAlive = false;
+			}
+		}
+		assertEquals(true, h.isAlive());
+		assertEquals(false, d.isAlive());
+	}
+	
+	@Test
+	public void testDragonDieRight() {
+		MazeBuilder maze = new MazeBuilder(m2);
+		Dragon d = new Dragon(1, 3, maze);
+		Hero h = new Hero(1, 1, maze);
+		h.setArmed(true);
+		boolean dragonAlive = true;
+
+		while (dragonAlive) {
+			d.moveOrSleep(maze);
+			d.fight(h, maze);
+			if (!d.isAlive()){
+				dragonAlive = false;
+			}
+		}
+		assertEquals(true, h.isAlive());
+		assertEquals(false, d.isAlive());
 	}
 }

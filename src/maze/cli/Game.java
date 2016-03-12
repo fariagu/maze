@@ -61,9 +61,9 @@ public class Game {
 		}
 		System.out.println("...");
 		char [][] m1 = {{'X', 'X', 'X', 'X', 'X'},
-						{'X', ' ', ' ', 'H', 'S'},
+						{'X', ' ', ' ', ' ', 'S'},
 						{'X', ' ', 'X', ' ', 'X'},
-						{'X', 'E', ' ', 'D', 'X'},
+						{'X', ' ', ' ', ' ', 'X'},
 						{'X', 'X', 'X', 'X', 'X'}};
 		MazeBuilder maze = new MazeBuilder(m1);
 		Hero h = new Hero(1, 3, maze);

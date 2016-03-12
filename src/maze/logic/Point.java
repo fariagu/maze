@@ -16,22 +16,22 @@ public class Point{
 	public int getX() {
 		return this.x;
 	}
-	
+/*	
 	public void setX(int x) {
 		this.x = x;
 	}
-	
+*/	
 	public int getY() {
 		return this.y;
 	}
-	
+/*	
 	public void setY(int y) {
 		this.y = y;
 	}
-	
+*/	/*
 	public Point getPos(){
 		//Point p = new Point(this.x, this.y);
 		return this;
-	}
+	}*/
 	
 }

@@ -113,7 +113,7 @@ public class Dragon extends Point{
 
 		while(canContinue==false) {
 			dir = r.nextInt(5);
-			System.out.println(dir);
+			//System.out.println(dir);
 
 			switch(dir) {
 			case 0:
