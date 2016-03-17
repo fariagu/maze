@@ -60,15 +60,11 @@ public class Game {
 			}
 		}
 		System.out.println("...");
-		char [][] m1 = {{'X', 'X', 'X', 'X', 'X'},
-						{'X', ' ', ' ', ' ', 'S'},
-						{'X', ' ', 'X', ' ', 'X'},
-						{'X', ' ', ' ', ' ', 'X'},
-						{'X', 'X', 'X', 'X', 'X'}};
-		MazeBuilder maze = new MazeBuilder(m1);
-		Hero h = new Hero(1, 3, maze);
-		Dragon d = new Dragon(3, 3, maze);
-		Sword s = new Sword(3, 1, maze);
+
+		MazeBuilder maze = new MazeBuilder(7);//must be an odd number TODO exception handling
+		Hero h = new Hero(maze);
+		Dragon d = new Dragon(maze);
+		Sword s = new Sword(maze);
 		String dir;
 		
 		while (finished == false){

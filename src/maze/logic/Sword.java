@@ -1,5 +1,7 @@
 package maze.logic;
 
+import java.util.Random;
+
 public class Sword extends Point{	
 	private boolean collected;
 /*
@@ -14,6 +16,24 @@ public class Sword extends Point{
 		this.x = x;
 		this.y = y;
 		collected = false;
+		m.printSword(this);
+	}
+	
+	public Sword(MazeBuilder m){
+		int size = m.getSize();
+		int x, y;
+		Random r = new Random();
+		
+		while (true){
+			x = r.nextInt(size -1) + 1;
+			y = r.nextInt(size -1) + 1;
+			
+			if (m.getMaze(x, y) == ' '){
+				this.x = x;
+				this.y = y;
+				break;
+			}
+		}
 		m.printSword(this);
 	}
 
@@ -41,6 +61,9 @@ public class Sword extends Point{
 	public void dragonOverlap(Dragon d, MazeBuilder m) {
 		if (this.x == d.x && this.y == d.y) {
 			m.setMaze(this.x, this.y, 'F');
+		}
+		else if (!this.isCollected()){
+			m.setMaze(this.x, this.y, 'E');
 		}
 	}
 	

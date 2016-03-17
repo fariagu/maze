@@ -1,5 +1,7 @@
 package maze.logic;
 
+import java.util.Random;
+
 import maze.logic.MazeBuilder;
 
 public class Hero extends Point{
@@ -19,6 +21,25 @@ public class Hero extends Point{
 		this.x = x;
 		this.y = y;
 		m.printHero(this);
+	}
+	
+	public Hero(MazeBuilder m){
+		int size = m.getSize();
+		int x, y;
+		Random r = new Random();
+		
+		while (true){
+			x = r.nextInt(size -1) + 1;
+			y = r.nextInt(size -1) + 1;
+			
+			if (m.getMaze(x, y) == ' '){
+				this.x = x;
+				this.y = y;
+				break;
+			}
+		}
+		
+		m.printHero(this);		
 	}
 
 	public boolean isArmed() {
@@ -105,12 +126,12 @@ public class Hero extends Point{
 			}
 			else if (m.getMaze(x, y-1) == ' ') {
 				m.setMaze(x, y, ' ');
-				this.y--;
+				y--;
 				m.printHero(this);	
 			}
 			else if (m.getMaze(x, y-1) == 'S' && this.armed && this.mapCleared){
 				m.setMaze(x, y, ' ');
-				this.y--;
+				y--;
 				m.printHero(this);
 				this.setFinished(true);
 			}

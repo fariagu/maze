@@ -28,6 +28,29 @@ public class Dragon extends Point{
 		alive = true;
 		m.printDragon(this);
 	}
+	
+	public Dragon(MazeBuilder m){
+		int size = m.getSize();
+		int x, y;
+		Random r = new Random();
+		
+		while (true){
+			x = r.nextInt(size -1) + 1;
+			y = r.nextInt(size -1) + 1;
+			
+			if (m.getMaze(x, y) == ' '){
+				this.x = x;
+				this.y = y;
+				break;
+			}
+		}
+		
+		alive = true;
+		m.printDragon(this);
+		
+		
+		
+	}
 
 	public boolean isAlive() {
 		return alive;
@@ -98,7 +121,7 @@ public class Dragon extends Point{
 			if (h.isArmed()){
 				this.alive = false;
 				h.setMapCleared(true);
-				m.setMaze(x, y, ' ');
+				m.setMaze(this.x, this.y, ' ');
 			}
 			else if (sleeping==false){
 				h.setAlive(false);
