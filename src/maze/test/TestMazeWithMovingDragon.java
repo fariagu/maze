@@ -126,7 +126,6 @@ public class TestMazeWithMovingDragon {
 		//Hero h = new Hero(1, 3, maze);
 		Dragon d = new Dragon(1, 1, maze);
 		Sword s = new Sword(2, 1, maze);
-		int x = d.getX();
 		
 		boolean overlapping = false;
 		while (!overlapping) {
@@ -136,13 +135,11 @@ public class TestMazeWithMovingDragon {
 				overlapping = true;
 				assertEquals(d.getX(), s.getX());
 				assertEquals(d.getY(), s.getY());
-				
-			}else {
-				overlapping = false;
 			}
-			
+			else {
+				overlapping = false;
+			}	
 		}
-		
 	}
 	
 	@Test

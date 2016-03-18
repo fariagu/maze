@@ -60,6 +60,17 @@ public class MazeBuilder implements IMazeBuilder {
 			System.out.println();
 		}
 	}
+	
+	public String printMaze2String(){
+		String string="";
+		for (int i = 0; i < maze.length; i++){
+			for (int j = 0; j < maze[i].length; j++){
+				string +=  maze[i][j] + " ";
+			}
+			string += "\n";
+		}
+		return string;
+	}
 
 	public void printHero(Hero h) {
 		if (h.isArmed()){

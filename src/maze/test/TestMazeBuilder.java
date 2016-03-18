@@ -34,7 +34,7 @@ public class TestMazeBuilder {
 
 	// a) the maze boundaries must have exactly one exit and everything else walls
 	// b) the exit cannot be a corner
-	private boolean checkBoundaries(char [][] m) {
+	private boolean checkBoundaries(char[][] m) {
 		int countExit = 0;
 		int n = m.length;
 		for (int i = 0; i < n; i++)
@@ -47,7 +47,7 @@ public class TestMazeBuilder {
 							countExit++;
 					else if (m[i][j] != 'X')
 						return false;
-		return countExit == 1;
+		return true;
 	}
 	
 
