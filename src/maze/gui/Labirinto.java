@@ -70,7 +70,13 @@ public class Labirinto {
 		textArea.setBounds(238, 36, 186, 214);
 		frmLabirinto.getContentPane().add(textArea);
 		
-		JButton ExitButton = new JButton("Exit");//sair do programa, alternativa ao X da janela
+		final JButton ExitButton = new JButton("Exit");//sair do programa, alternativa ao X da janela
+		ExitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Status.setText("Adeus");//nao se ve, fecha logo
+				System.exit(0);
+			}
+		});
 		ExitButton.setBounds(109, 227, 89, 23);
 		frmLabirinto.getContentPane().add(ExitButton);
 		
