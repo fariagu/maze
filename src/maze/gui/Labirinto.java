@@ -13,7 +13,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import maze.logic.Dragon;
+import maze.logic.Hero;
 import maze.logic.MazeBuilder;
+import maze.logic.Sword;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,7 +28,43 @@ public class Labirinto {
 	private JTextField dimension;
 	private JTextField numberofdragon;
 	public MazeBuilder maze; //o nosso maze. Ainda se tem que ver a privacidade
+	public Hero h;
+	public Dragon d;
+	public Sword s;
+	public int mode;
 
+	private void turno(int direcao){
+		h.setDir(direcao);
+		h.move(maze);
+		if (!s.isCollected()){
+			s.heroOverlap(h, maze);
+		}
+		if (d.isAlive()) {
+			d.fight(h, maze);
+			
+			if (mode == 2 || mode == 3){
+				if (mode == 2){
+					d.move(maze);
+				}
+				if (mode == 3){
+					d.moveOrSleep(maze);
+				}
+				s.dragonOverlap(d, maze);
+				d.fight(h, maze);
+			}
+		}
+		if (!h.isAlive()) {
+			maze.printMaze();
+			System.out.println("Game Over");
+		}
+		if (h.isFinished()){
+			maze.printMaze();
+			System.out.println("Success!");
+		}
+	}
+	
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -81,44 +120,124 @@ public class Labirinto {
 		frmLabirinto.getContentPane().add(ExitButton);
 		
 		final JButton LeftButton = new JButton("<");
+		final JButton DownButton = new JButton("v");
+		final JButton RightButton = new JButton(">");
+		final JButton UpButton = new JButton("^");
+
+		//botao para a esquerda
 		LeftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Status.setText("Moveu-se para a esquerda");
+				turno(2);
+				textArea.setText(maze.printMaze2String());
+				if (!h.isAlive()) {
+					maze.printMaze();
+					Status.setText("Perdeu");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
+				if (h.isFinished()){
+					maze.printMaze();
+					Status.setText("Ganhou");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
 			}
 		});
 		LeftButton.setEnabled(false);
 		LeftButton.setBounds(10, 174, 60, 23);
 		frmLabirinto.getContentPane().add(LeftButton);
 		
-		final JButton DownButton = new JButton("v");
+		//botao para baixo
 		DownButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Status.setText("Moveu-se para baixo");
+				turno(1);
+				textArea.setText(maze.printMaze2String());
+				if (!h.isAlive()) {
+					maze.printMaze();
+					Status.setText("Perdeu");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
+				if (h.isFinished()){
+					maze.printMaze();
+					Status.setText("Ganhou");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
 			}
 		});
 		DownButton.setEnabled(false);
 		DownButton.setBounds(81, 174, 60, 23);
 		frmLabirinto.getContentPane().add(DownButton);
 		
-		final JButton RightButton = new JButton(">");
+		//botao para a direita
 		RightButton.setEnabled(false);
 		RightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Status.setText("Moveu-se para a direita");
+				turno(3);
+				textArea.setText(maze.printMaze2String());
+				if (!h.isAlive()) {
+					maze.printMaze();
+					Status.setText("Perdeu");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
+				if (h.isFinished()){
+					maze.printMaze();
+					Status.setText("Ganhou");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
+
 			}
 		});
 		RightButton.setBounds(151, 174, 60, 23);
 		frmLabirinto.getContentPane().add(RightButton);
 		
-		final JButton UpButton = new JButton("^");
+		//botao para cima
 		UpButton.setEnabled(false);
 		UpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Status.setText("Moveu-se para cima");
+				turno(0);
+				textArea.setText(maze.printMaze2String());
+				if (!h.isAlive()) {
+					maze.printMaze();
+					Status.setText("Perdeu");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
+				if (h.isFinished()){
+					maze.printMaze();
+					Status.setText("Ganhou");
+					LeftButton.setEnabled(false);
+					DownButton.setEnabled(false);
+					RightButton.setEnabled(false);
+					UpButton.setEnabled(false);
+				}
+
 			}
 		});
 		UpButton.setBounds(81, 140, 60, 23);
 		frmLabirinto.getContentPane().add(UpButton);
+		
 		
 		JComboBox comboBox = new JComboBox();//modo de jogo
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Useless Dragon", "Sleepy Dragon", "Beast Mode"}));
@@ -154,7 +273,11 @@ public class Labirinto {
 		JButton StartButton = new JButton("Start");
 		StartButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				maze = new MazeBuilder(Integer.parseInt(dimension.getText()));//criar o maze
+				//criar o maze
+				maze = new MazeBuilder(Integer.parseInt(dimension.getText()));
+				h = new Hero(maze);
+				d = new Dragon(maze);
+				s = new Sword(maze);
 				//tornar os botoes de direcao utilizaveis
 				LeftButton.setEnabled(true);
 				DownButton.setEnabled(true);

@@ -28,12 +28,12 @@ public class Game {
 			return -1;
 		}
 	}
-
-	public static void main(String args[]){
+	
+	public static int gamemode(){
 		Scanner input = new Scanner(System.in);
+		boolean gameSet = false;
 		String gameMode;
 		int mode = 0;
-		boolean gameSet = false;
 		
 		System.out.println("Choose the Game Mode:");
 		System.out.println("1 - Dragon doesn't move;");
@@ -60,7 +60,14 @@ public class Game {
 			}
 		}
 		System.out.println("...");
+		return mode;
+	}
 
+	public static void main(String args[]){
+		int mode = 0;
+		mode = gamemode();
+		
+		Scanner input = new Scanner(System.in);
 		MazeBuilder maze = new MazeBuilder(7);//must be an odd number TODO exception handling
 		Hero h = new Hero(maze);
 		Dragon d = new Dragon(maze);
