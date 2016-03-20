@@ -105,7 +105,7 @@ public class Labirinto {
 		
 		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
 		textArea.setEditable(false);
-		textArea.setFont(new Font("Courier New", Font.PLAIN, 11));
+		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
 		textArea.setBounds(238, 36, 186, 214);
 		frmLabirinto.getContentPane().add(textArea);
 		
@@ -256,14 +256,14 @@ public class Labirinto {
 		lblNewLabel_3.setBounds(10, 39, 113, 14);
 		frmLabirinto.getContentPane().add(lblNewLabel_3);
 		
-		dimension = new JTextField();//dimensão do labirinto NxN
+		dimension = new JTextField();//dimensï¿½o do labirinto NxN
 		dimension.setText("11");
 		dimension.setHorizontalAlignment(SwingConstants.RIGHT);
 		dimension.setBounds(129, 36, 99, 20);
 		frmLabirinto.getContentPane().add(dimension);
 		dimension.setColumns(10);
 		
-		numberofdragon = new JTextField();//numero de dragões presentes no labirinto
+		numberofdragon = new JTextField();//numero de dragï¿½es presentes no labirinto
 		numberofdragon.setHorizontalAlignment(SwingConstants.RIGHT);
 		numberofdragon.setText("1");
 		numberofdragon.setBounds(129, 61, 99, 20);

@@ -1,6 +1,7 @@
 package maze.logic;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Dragon extends Point{
 	private boolean alive;
@@ -9,6 +10,8 @@ public class Dragon extends Point{
 	private int fallAsleepCounter;
 	private int sleepCounter;
 	private int wakeUpCounter;
+	static private ArrayList<Dragon> dragons;
+	
 /*
 	public Dragon(MazeBuilder m) {
 		x = 3;
@@ -51,6 +54,16 @@ public class Dragon extends Point{
 		
 		
 	}
+	
+	public Dragon(){
+		dragons = new ArrayList<Dragon>();
+	}
+	
+	public void multipleDragons(int n, MazeBuilder m){
+		for (int i = 0; i < n; i++){
+			dragons.add(new Dragon(m));
+		}
+	}
 
 	public boolean isAlive() {
 		return alive;
@@ -63,7 +76,16 @@ public class Dragon extends Point{
 	public boolean isSleeping() {
 		return sleeping;
 	}
-/*
+	
+	public static ArrayList<Dragon> getDragons() {
+		return dragons;
+	}
+
+	public void setDragons(ArrayList<Dragon> dragons) {
+		this.dragons = dragons;
+	}
+
+	/*
 	public void setSleeping(boolean sleeping) {
 		this.sleeping = sleeping;
 	}
@@ -120,7 +142,7 @@ public class Dragon extends Point{
 				((this.y == h.y)&&(this.x == h.x))) {
 			if (h.isArmed()){
 				this.alive = false;
-				h.setMapCleared(true);
+				h.checkMapCleared();
 				m.setMaze(this.x, this.y, ' ');
 			}
 			else if (sleeping==false){

@@ -28,18 +28,18 @@ public class Game {
 			return -1;
 		}
 	}
-	
+
 	public static int gamemode(){
 		Scanner input = new Scanner(System.in);
 		boolean gameSet = false;
 		String gameMode;
 		int mode = 0;
-		
+
 		System.out.println("Choose the Game Mode:");
 		System.out.println("1 - Dragon doesn't move;");
 		System.out.println("2 - Dragon moves randomly;");
 		System.out.println("3 - Dragon move and sleeps randomly.");
-		
+
 		while (!gameSet) {
 			gameMode = input.nextLine();
 
@@ -66,37 +66,42 @@ public class Game {
 	public static void main(String args[]){
 		int mode = 0;
 		mode = gamemode();
-		
+
 		Scanner input = new Scanner(System.in);
-		MazeBuilder maze = new MazeBuilder(7);//must be an odd number TODO exception handling
+		MazeBuilder maze = new MazeBuilder(13);//must be an odd number TODO exception handling
 		Hero h = new Hero(maze);
-		Dragon d = new Dragon(maze);
+		Dragon d = new Dragon();
+		d.multipleDragons(3, maze);
 		Sword s = new Sword(maze);
 		String dir;
-		
+
 		while (finished == false){
 			maze.printMaze();
 			dir = input.nextLine();
 			h.setDir(dirToInt(dir));
 			h.move(maze);
+
 			if (!s.isCollected()){
 				s.heroOverlap(h, maze);
 			}
-			if (d.isAlive()) {
-				d.fight(h, maze);
-				
-				if (mode == 2 || mode == 3){
-					if (mode == 2){
-						d.move(maze);
+
+			for (int i = 0; i < d.getDragons().size(); i++){
+				if (d.getDragons().get(i).isAlive()) {
+					d.getDragons().get(i).fight(h, maze);
+
+					if (mode == 2 || mode == 3){
+						if (mode == 2){
+							d.getDragons().get(i).move(maze);
+						}
+						if (mode == 3){
+							d.getDragons().get(i).moveOrSleep(maze);
+						}
+						s.dragonOverlap(d.getDragons().get(i), maze);
+						d.getDragons().get(i).fight(h, maze);
 					}
-					if (mode == 3){
-						d.moveOrSleep(maze);
-					}
-					s.dragonOverlap(d, maze);
-					d.fight(h, maze);
 				}
 			}
-			
+
 			if (dir.equals("q")){
 				break;
 			}

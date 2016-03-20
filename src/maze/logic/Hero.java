@@ -1,5 +1,6 @@
 package maze.logic;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import maze.logic.MazeBuilder;
@@ -80,6 +81,17 @@ public class Hero extends Point{
 		m.setMaze(this, 'A');
 		else
 			m.setMaze(x, y, 'H');
+	}
+	
+	public void checkMapCleared(){
+		ArrayList<Dragon> d = Dragon.getDragons();
+		
+		for (int i = 0; i < d.size(); i++){
+			if(d.get(i).isAlive()){
+				return;
+			}
+		}
+		this.mapCleared = true;
 	}
 
 	public void move(MazeBuilder m) {//0=up, 1=down, 2=left, 3=right

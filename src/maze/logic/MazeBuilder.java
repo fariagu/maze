@@ -65,7 +65,7 @@ public class MazeBuilder implements IMazeBuilder {
 		String string="";
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){
-				string +=  maze[i][j] + " ";
+				string +=  (maze[i][j] + " ");
 			}
 			string += "\n";
 		}
