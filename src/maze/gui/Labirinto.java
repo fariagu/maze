@@ -27,6 +27,7 @@ public class Labirinto {
 	private JFrame frmLabirinto;
 	private JTextField dimension;
 	private JTextField numberofdragon;
+	private JComboBox comboBox;
 	public MazeBuilder maze; //o nosso maze. Ainda se tem que ver a privacidade
 	public Hero h;
 	public Dragon d;
@@ -39,20 +40,23 @@ public class Labirinto {
 		if (!s.isCollected()){
 			s.heroOverlap(h, maze);
 		}
-		if (d.isAlive()) {
-			d.fight(h, maze);
-			
-			if (mode == 2 || mode == 3){
-				if (mode == 2){
-					d.move(maze);
+		for (int i = 0; i < d.getDragons().size(); i++){
+			if (d.getDragons().get(i).isAlive()) {
+				d.getDragons().get(i).fight(h, maze);
+
+				if (mode == 2 || mode == 3){
+					if (mode == 2){
+						d.getDragons().get(i).move(maze);
+					}
+					if (mode == 3){
+						d.getDragons().get(i).moveOrSleep(maze);
+					}
+					s.dragonOverlap(d.getDragons().get(i), maze);
+					d.getDragons().get(i).fight(h, maze);
 				}
-				if (mode == 3){
-					d.moveOrSleep(maze);
-				}
-				s.dragonOverlap(d, maze);
-				d.fight(h, maze);
 			}
 		}
+
 		if (!h.isAlive()) {
 			maze.printMaze();
 			System.out.println("Game Over");
@@ -62,9 +66,9 @@ public class Labirinto {
 			System.out.println("Success!");
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Launch the application.
 	 */
@@ -79,6 +83,24 @@ public class Labirinto {
 				}
 			}
 		});
+	}
+
+	public void convGameMode(){
+		String s = (String) comboBox.getSelectedItem();
+
+		switch (s){
+		case "Useless":
+			mode = 1;
+			break;
+		case "Sleepy":
+			mode = 3;
+			break;
+		case "Beast Mode":
+			mode = 2;
+			break;
+		default:
+			mode = 1;
+		}
 	}
 
 	/**
@@ -98,17 +120,17 @@ public class Labirinto {
 		frmLabirinto.setBounds(100, 100, 450, 300);
 		frmLabirinto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLabirinto.getContentPane().setLayout(null);
-		
+
 		final JLabel Status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
 		Status.setBounds(238, 11, 186, 14);
 		frmLabirinto.getContentPane().add(Status);
-		
+
 		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
 		textArea.setEditable(false);
 		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
 		textArea.setBounds(238, 36, 186, 214);
 		frmLabirinto.getContentPane().add(textArea);
-		
+
 		final JButton ExitButton = new JButton("Exit");//sair do programa, alternativa ao X da janela
 		ExitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -118,7 +140,7 @@ public class Labirinto {
 		});
 		ExitButton.setBounds(109, 227, 89, 23);
 		frmLabirinto.getContentPane().add(ExitButton);
-		
+
 		final JButton LeftButton = new JButton("<");
 		final JButton DownButton = new JButton("v");
 		final JButton RightButton = new JButton(">");
@@ -151,7 +173,7 @@ public class Labirinto {
 		LeftButton.setEnabled(false);
 		LeftButton.setBounds(10, 174, 60, 23);
 		frmLabirinto.getContentPane().add(LeftButton);
-		
+
 		//botao para baixo
 		DownButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -179,7 +201,7 @@ public class Labirinto {
 		DownButton.setEnabled(false);
 		DownButton.setBounds(81, 174, 60, 23);
 		frmLabirinto.getContentPane().add(DownButton);
-		
+
 		//botao para a direita
 		RightButton.setEnabled(false);
 		RightButton.addActionListener(new ActionListener() {
@@ -208,7 +230,7 @@ public class Labirinto {
 		});
 		RightButton.setBounds(151, 174, 60, 23);
 		frmLabirinto.getContentPane().add(RightButton);
-		
+
 		//botao para cima
 		UpButton.setEnabled(false);
 		UpButton.addActionListener(new ActionListener() {
@@ -237,47 +259,49 @@ public class Labirinto {
 		});
 		UpButton.setBounds(81, 140, 60, 23);
 		frmLabirinto.getContentPane().add(UpButton);
-		
-		
-		JComboBox comboBox = new JComboBox();//modo de jogo
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Useless Dragon", "Sleepy Dragon", "Beast Mode"}));
+
+
+		comboBox = new JComboBox();//modo de jogo
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Useless", "Sleepy", "Beast Mode"}));
 		comboBox.setBounds(129, 86, 99, 20);
 		frmLabirinto.getContentPane().add(comboBox);
-		
-		JLabel lblNewLabel_1 = new JLabel("Tipo de Dragoes");
+
+		JLabel lblNewLabel_1 = new JLabel("Dificulty");
 		lblNewLabel_1.setBounds(10, 89, 109, 14);
 		frmLabirinto.getContentPane().add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("Numero de Dragoes");
+
+		JLabel lblNewLabel_2 = new JLabel("No. of Dragons");
 		lblNewLabel_2.setBounds(10, 64, 109, 14);
 		frmLabirinto.getContentPane().add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("Dimensao do Labirinto");
+
+		JLabel lblNewLabel_3 = new JLabel("Maze Size");
 		lblNewLabel_3.setBounds(10, 39, 113, 14);
 		frmLabirinto.getContentPane().add(lblNewLabel_3);
-		
+
 		dimension = new JTextField();//dimens�o do labirinto NxN
 		dimension.setText("11");
 		dimension.setHorizontalAlignment(SwingConstants.RIGHT);
 		dimension.setBounds(129, 36, 99, 20);
 		frmLabirinto.getContentPane().add(dimension);
 		dimension.setColumns(10);
-		
+
 		numberofdragon = new JTextField();//numero de drag�es presentes no labirinto
 		numberofdragon.setHorizontalAlignment(SwingConstants.RIGHT);
 		numberofdragon.setText("1");
 		numberofdragon.setBounds(129, 61, 99, 20);
 		frmLabirinto.getContentPane().add(numberofdragon);
 		numberofdragon.setColumns(10);
-		
+
 		JButton StartButton = new JButton("Start");
 		StartButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//criar o maze
 				maze = new MazeBuilder(Integer.parseInt(dimension.getText()));
 				h = new Hero(maze);
-				d = new Dragon(maze);
 				s = new Sword(maze);
+				d = new Dragon();
+				d.multipleDragons(Integer.parseInt(numberofdragon.getText()), maze);
+				convGameMode();
 				//tornar os botoes de direcao utilizaveis
 				LeftButton.setEnabled(true);
 				DownButton.setEnabled(true);
@@ -287,15 +311,15 @@ public class Labirinto {
 				Status.setText("A jogar...");
 				//imprimir o labirinto na textArea
 				textArea.setText(maze.printMaze2String());
-				
-				
+
+
 			}
 		});
 		StartButton.setBounds(10, 227, 89, 23);
 		frmLabirinto.getContentPane().add(StartButton);
-		
-		
-		
-		
+
+
+
+
 	}
 }
