@@ -17,12 +17,21 @@ import javax.swing.JPanel;
 
 import maze.logic.MazeBuilder;
 
-public class Panel extends JPanel
-implements MouseListener, MouseMotionListener, KeyListener {
+public class Panel extends JPanel{
 	private int length = 15;
 	private int x = 0, y = 0;
 	private BufferedImage s_hero, ns_hero, dragon, s_dragon, sword, dsword, wall, exit, empty;
 	private char[][] maze;
+	private int dir;
+	private Labirinto l;
+
+	public int getDir() {
+		return dir;
+	}
+
+	public void setDir(int dir) {
+		this.dir = dir;
+	}
 
 	public char[][] getMaze() {
 		return maze;
@@ -31,8 +40,13 @@ implements MouseListener, MouseMotionListener, KeyListener {
 	public void setMaze(char[][] maze) {
 		this.maze = maze;
 	}
+	
+	public void initMaze(MazeBuilder m){
+		this.maze = new char[m.getSize()][m.getSize()];
+		this.maze = m.getFullMaze();
+	}
 
-	public Panel(MazeBuilder m){
+	public Panel(/*MazeBuilder m*/){
 		try {
 			s_hero = ImageIO.read(new File("Images/s_hero.jpg"));
 			ns_hero = ImageIO.read(new File("Images/ns_hero.jpg"));
@@ -46,7 +60,7 @@ implements MouseListener, MouseMotionListener, KeyListener {
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-		maze = new char[m.getSize()][m.getSize()];
+		//maze = new char[m.getSize()][m.getSize()];
 	}
 
 	public void paintComponent(Graphics g){
@@ -57,96 +71,43 @@ implements MouseListener, MouseMotionListener, KeyListener {
 				
 				switch(maze[i][j]){
 				case 'X':
-					g.drawImage(wall, x, y, 15, 15, null);
+					g.drawImage(wall, x, y, length, length, null);
 					break;
 				case ' ':
-					g.drawImage(empty, x, y, 15, 15, null);
+					g.drawImage(empty, x, y, length, length, null);
 					break;
 				case 'D':
-					g.drawImage(dragon, x, y, 15, 15, null);
+					g.drawImage(dragon, x, y, length, length, null);
 					break;
 				case 'd':
-					g.drawImage(s_dragon, x, y, 15, 15, null);
+					g.drawImage(s_dragon, x, y, length, length, null);
 					break;
 				case 'A':
-					g.drawImage(s_hero, x, y, 15, 15, null);
+					g.drawImage(s_hero, x, y, length, length, null);
 					break;
 				case 'H':
-					g.drawImage(ns_hero, x, y, 15, 15, null);
+					g.drawImage(ns_hero, x, y, length, length, null);
 					break;
 				case 'S':
-					g.drawImage(exit, x, y, 15, 15, null);
+					g.drawImage(exit, x, y, length, length, null);
 					break;
 				case 'E':
-					g.drawImage(sword, x, y, 15, 15, null);
+					g.drawImage(sword, x, y, length, length, null);
 					break;
 				case 'F':
-					g.drawImage(dsword, x, y, 15, 15, null);
+					g.drawImage(dsword, x, y, length, length, null);
 					break;
 				default:
 					break;
 				}
-				x+=15;
+				x+=length;
 			}
 			x=0;
-			y+=15;
+			y+=length;
 		}
 		x = 0;
 		y = 0;
 		//g.drawImage(square, x, y, length, length, 0, 0, square.getWidth(), square.getHeight(), null);
 		//g.fillRect(x, y, length, length);
 	}
-
-	@Override
-	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {}
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {}
-
-	public void printMaze(MazeBuilder m){
-
-	}
-	/*	
-	public static void main(String[] args) {
-		JFrame f = new JFrame("Graphics Demo");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
-		f.setPreferredSize(new Dimension(500, 500));
-		JPanel panel = new Panel();
-		f.getContentPane().add(panel);
-        f.pack(); 
-        f.setVisible(true);
-        panel.repaint();
-        panel.requestFocus(); // to receive keyboard events       
-	}*/
-
 }

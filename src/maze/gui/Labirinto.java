@@ -21,6 +21,8 @@ import maze.logic.MazeBuilder;
 import maze.logic.Sword;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.awt.Window.Type;
 
@@ -28,16 +30,74 @@ public class Labirinto {
 
 	private JFrame frmLabirinto;
 	private JTextField dimension;
-	private JTextField numberofdragon;
+	private JTextField nDragons;
 	private JComboBox comboBox;
 	private JPanel gamePanel;
-	public MazeBuilder maze; //o nosso maze. Ainda se tem que ver a privacidade
-	public Hero h;
-	public Dragon d;
-	public Sword s;
-	public int mode;
+	private JLabel status;
+	private MazeBuilder maze; //o nosso maze. Ainda se tem que ver a privacidade
+	private Hero h;
+	private Dragon d;
+	private Sword s;
+	private int mode;
 
-	private void turno(int direcao){
+	private JButton leftButton;
+	private JButton rightButton;
+	private JButton upButton;
+	private JButton downButton;
+
+
+	public JPanel getGamePanel() {
+		return gamePanel;
+	}
+	public void setGamePanel(JPanel gamePanel) {
+		this.gamePanel = gamePanel;
+	}
+	public JLabel getStatus() {
+		return status;
+	}
+	public void setStatus(JLabel status) {
+		this.status = status;
+	}
+	public MazeBuilder getMaze() {
+		return maze;
+	}
+	public void setMaze(MazeBuilder maze) {
+		this.maze = maze;
+	}	
+	public Hero getH() {
+		return h;
+	}
+	public void setH(Hero h) {
+		this.h = h;
+	}	
+	public JButton getLeftButton() {
+		return leftButton;
+	}
+	public void setLeftButton(JButton leftButton) {
+		this.leftButton = leftButton;
+	}
+	public JButton getRightButton() {
+		return rightButton;
+	}
+	public void setRightButton(JButton rightButton) {
+		this.rightButton = rightButton;
+	}
+	public JButton getUpButton() {
+		return upButton;
+	}
+	public void setUpButton(JButton upButton) {
+		this.upButton = upButton;
+	}
+	public JButton getDownButton() {
+		return downButton;
+	}
+	public void setDownButton(JButton downButton) {
+		this.downButton = downButton;
+	}
+
+
+
+	public void turn(int direcao){
 		h.setDir(direcao);
 		h.move(maze);
 		if (!s.isCollected()){
@@ -61,13 +121,15 @@ public class Labirinto {
 		}
 
 		if (!h.isAlive()) {
-			maze.printMaze();
 			System.out.println("Game Over");
+			gamePanel.setFocusable(false);
 		}
 		if (h.isFinished()){
-			maze.printMaze();
 			System.out.println("Success!");
+			gamePanel.setFocusable(false);
 		}
+		maze.printMaze();
+		gamePanel.requestFocus();
 	}
 
 
@@ -110,8 +172,102 @@ public class Labirinto {
 	 * Create the application.
 	 */
 	public Labirinto() {
+		//addKeyListener(this);
 		initialize();
 	}
+
+	public void moveLeft(){
+		status.setText("Moveu-se para a esquerda");
+		turn(2);
+		//textArea.setText(maze.printMaze2String());
+		((Panel) gamePanel).setMaze(maze.getFullMaze());
+		gamePanel.repaint();
+
+		if (!h.isAlive() || h.isFinished()){
+			maze.printMaze();
+			leftButton.setEnabled(false);
+			downButton.setEnabled(false);
+			rightButton.setEnabled(false);
+			upButton.setEnabled(false);
+
+			if (!h.isAlive()){
+				status.setText("Perdeu");
+			}
+			if (h.isFinished()){
+				status.setText("Ganhou");
+			}
+		}
+	}
+
+	public void moveRight(){
+		status.setText("Moveu-se para a direita");
+		turn(3);
+		//textArea.setText(maze.printMaze2String());
+		((Panel) gamePanel).setMaze(maze.getFullMaze());
+		gamePanel.repaint();
+
+		if (!h.isAlive() || h.isFinished()){
+			maze.printMaze();
+			leftButton.setEnabled(false);
+			downButton.setEnabled(false);
+			rightButton.setEnabled(false);
+			upButton.setEnabled(false);
+
+			if (!h.isAlive()){
+				status.setText("Perdeu");
+			}
+			if (h.isFinished()){
+				status.setText("Ganhou");
+			}
+		}
+	}
+
+	public void moveUp(){
+		status.setText("Moveu-se para cima");
+		turn(0);
+		//textArea.setText(maze.printMaze2String());
+		((Panel) gamePanel).setMaze(maze.getFullMaze());
+		gamePanel.repaint();
+
+		if (!h.isAlive() || h.isFinished()){
+			maze.printMaze();
+			leftButton.setEnabled(false);
+			downButton.setEnabled(false);
+			rightButton.setEnabled(false);
+			upButton.setEnabled(false);
+
+			if (!h.isAlive()){
+				status.setText("Perdeu");
+			}
+			if (h.isFinished()){
+				status.setText("Ganhou");
+			}
+		}
+	}
+
+	public void moveDown(){
+		status.setText("Moveu-se para baixo");
+		turn(1);
+		//textArea.setText(maze.printMaze2String());
+		((Panel) gamePanel).setMaze(maze.getFullMaze());
+		gamePanel.repaint();
+
+		if (!h.isAlive() || h.isFinished()){
+			maze.printMaze();
+			leftButton.setEnabled(false);
+			downButton.setEnabled(false);
+			rightButton.setEnabled(false);
+			upButton.setEnabled(false);
+
+			if (!h.isAlive()){
+				status.setText("Perdeu");
+			}
+			if (h.isFinished()){
+				status.setText("Ganhou");
+			}
+		}
+	}
+
 
 	/**
 	 * Initialize the contents of the frame.
@@ -124,9 +280,9 @@ public class Labirinto {
 		frmLabirinto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLabirinto.getContentPane().setLayout(null);
 
-		final JLabel Status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
-		Status.setBounds(238, 11, 186, 14);
-		frmLabirinto.getContentPane().add(Status);
+		status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
+		status.setBounds(238, 11, 186, 14);
+		frmLabirinto.getContentPane().add(status);
 
 /*		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
 		textArea.setEditable(false);
@@ -134,144 +290,61 @@ public class Labirinto {
 		textArea.setBounds(238, 36, 186, 214);
 		frmLabirinto.getContentPane().add(textArea);
 */
-		
-		
+
 		final JButton ExitButton = new JButton("Exit");//sair do programa, alternativa ao X da janela
 		ExitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Status.setText("Adeus");//nao se ve, fecha logo
+				status.setText("Adeus");//nao se ve, fecha logo
 				System.exit(0);
 			}
 		});
 		ExitButton.setBounds(109, 227, 89, 23);
 		frmLabirinto.getContentPane().add(ExitButton);
 
-		final JButton LeftButton = new JButton("<");
-		final JButton DownButton = new JButton("v");
-		final JButton RightButton = new JButton(">");
-		final JButton UpButton = new JButton("^");
+		leftButton = new JButton("<");
+		downButton = new JButton("v");
+		rightButton = new JButton(">");
+		upButton = new JButton("^");
 
 		//botao para a esquerda
-		LeftButton.addActionListener(new ActionListener() {
+		leftButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Status.setText("Moveu-se para a esquerda");
-				turno(2);
-				//textArea.setText(maze.printMaze2String());
-				((Panel) gamePanel).setMaze(maze.getFullMaze());
-				gamePanel.repaint();
-				if (!h.isAlive()) {
-					maze.printMaze();
-					Status.setText("Perdeu");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-				if (h.isFinished()){
-					maze.printMaze();
-					Status.setText("Ganhou");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
+				moveLeft();
 			}
 		});
-		LeftButton.setEnabled(false);
-		LeftButton.setBounds(10, 174, 60, 23);
-		frmLabirinto.getContentPane().add(LeftButton);
-
-		//botao para baixo
-		DownButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Status.setText("Moveu-se para baixo");
-				turno(1);
-				//textArea.setText(maze.printMaze2String());
-				((Panel) gamePanel).setMaze(maze.getFullMaze());
-				gamePanel.repaint();
-				if (!h.isAlive()) {
-					maze.printMaze();
-					Status.setText("Perdeu");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-				if (h.isFinished()){
-					maze.printMaze();
-					Status.setText("Ganhou");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-			}
-		});
-		DownButton.setEnabled(false);
-		DownButton.setBounds(81, 174, 60, 23);
-		frmLabirinto.getContentPane().add(DownButton);
+		leftButton.setEnabled(false);
+		leftButton.setBounds(10, 174, 60, 23);
+		frmLabirinto.getContentPane().add(leftButton);
 
 		//botao para a direita
-		RightButton.setEnabled(false);
-		RightButton.addActionListener(new ActionListener() {
+		rightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Status.setText("Moveu-se para a direita");
-				turno(3);
-				//textArea.setText(maze.printMaze2String());
-				((Panel) gamePanel).setMaze(maze.getFullMaze());
-				gamePanel.repaint();
-				if (!h.isAlive()) {
-					maze.printMaze();
-					Status.setText("Perdeu");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-				if (h.isFinished()){
-					maze.printMaze();
-					Status.setText("Ganhou");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-
+				moveRight();
 			}
 		});
-		RightButton.setBounds(151, 174, 60, 23);
-		frmLabirinto.getContentPane().add(RightButton);
+		rightButton.setEnabled(false);
+		rightButton.setBounds(151, 174, 60, 23);
+		frmLabirinto.getContentPane().add(rightButton);
 
 		//botao para cima
-		UpButton.setEnabled(false);
-		UpButton.addActionListener(new ActionListener() {
+		upButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Status.setText("Moveu-se para cima");
-				turno(0);
-				//textArea.setText(maze.printMaze2String());
-				((Panel) gamePanel).setMaze(maze.getFullMaze());
-				gamePanel.repaint();
-				if (!h.isAlive()) {
-					maze.printMaze();
-					Status.setText("Perdeu");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-				if (h.isFinished()){
-					maze.printMaze();
-					Status.setText("Ganhou");
-					LeftButton.setEnabled(false);
-					DownButton.setEnabled(false);
-					RightButton.setEnabled(false);
-					UpButton.setEnabled(false);
-				}
-
+				moveUp();
 			}
 		});
-		UpButton.setBounds(81, 140, 60, 23);
-		frmLabirinto.getContentPane().add(UpButton);
+		upButton.setEnabled(false);
+		upButton.setBounds(81, 140, 60, 23);
+		frmLabirinto.getContentPane().add(upButton);
+
+		//botao para baixo
+		downButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				moveDown();
+			}
+		});
+		downButton.setEnabled(false);
+		downButton.setBounds(81, 174, 60, 23);
+		frmLabirinto.getContentPane().add(downButton);
 
 
 		comboBox = new JComboBox();//modo de jogo
@@ -298,12 +371,13 @@ public class Labirinto {
 		frmLabirinto.getContentPane().add(dimension);
 		dimension.setColumns(10);
 
-		numberofdragon = new JTextField();//numero de drag�es presentes no labirinto
-		numberofdragon.setHorizontalAlignment(SwingConstants.RIGHT);
-		numberofdragon.setText("1");
-		numberofdragon.setBounds(129, 61, 99, 20);
-		frmLabirinto.getContentPane().add(numberofdragon);
-		numberofdragon.setColumns(10);
+		nDragons = new JTextField();//numero de drag�es presentes no labirinto
+		nDragons.setHorizontalAlignment(SwingConstants.RIGHT);
+		nDragons.setText("1");
+		nDragons.setBounds(129, 61, 99, 20);
+		frmLabirinto.getContentPane().add(nDragons);
+		nDragons.setColumns(10);
+
 
 		JButton StartButton = new JButton("Start");
 		StartButton.addActionListener(new ActionListener() {
@@ -313,34 +387,63 @@ public class Labirinto {
 				h = new Hero(maze);
 				s = new Sword(maze);
 				d = new Dragon();
-				d.multipleDragons(Integer.parseInt(numberofdragon.getText()), maze);
-				
-				gamePanel = new Panel(maze);
+				d.multipleDragons(Integer.parseInt(nDragons.getText()), maze);
+
+				gamePanel = new Panel(/*maze*/);
 				gamePanel.setBounds(238, 36, 195, 214);
 				gamePanel.setVisible(true);
+				gamePanel.setFocusable(true);
+				gamePanel.addKeyListener(new KeyListener() {
+
+					@Override
+					public void keyPressed(KeyEvent e) {
+						switch(e.getKeyCode()){
+						case KeyEvent.VK_LEFT: 
+							moveLeft();
+							break;
+
+						case KeyEvent.VK_RIGHT: 
+							moveRight();
+							break;
+
+						case KeyEvent.VK_UP: 
+							moveUp();
+							break;
+
+						case KeyEvent.VK_DOWN: 
+							moveDown();
+							break;
+						case KeyEvent.VK_ESCAPE: 
+							System.exit(0);
+							break;
+						}
+					}
+
+					@Override
+					public void keyReleased(KeyEvent e) {}
+
+					@Override
+					public void keyTyped(KeyEvent e) {}
+					
+				});
 				frmLabirinto.getContentPane().add(gamePanel);
-				
+				gamePanel.requestFocus();
+
 				convGameMode();
 				//tornar os botoes de direcao utilizaveis
-				LeftButton.setEnabled(true);
-				DownButton.setEnabled(true);
-				RightButton.setEnabled(true);
-				UpButton.setEnabled(true);
+				leftButton.setEnabled(true);
+				downButton.setEnabled(true);
+				rightButton.setEnabled(true);
+				upButton.setEnabled(true);
 				//atualizar o estado do jogo
-				Status.setText("A jogar...");
+				status.setText("A jogar...");
 				//imprimir o labirinto na textArea
 				//textArea.setText(maze.printMaze2String());
 				((Panel) gamePanel).setMaze(maze.getFullMaze());
 				gamePanel.repaint();
-
-
 			}
 		});
 		StartButton.setBounds(10, 227, 89, 23);
 		frmLabirinto.getContentPane().add(StartButton);
-
-
-
-
 	}
 }
