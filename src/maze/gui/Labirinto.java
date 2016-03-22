@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 import java.awt.Font;
@@ -28,6 +30,7 @@ public class Labirinto {
 	private JTextField dimension;
 	private JTextField numberofdragon;
 	private JComboBox comboBox;
+	private JPanel gamePanel;
 	public MazeBuilder maze; //o nosso maze. Ainda se tem que ver a privacidade
 	public Hero h;
 	public Dragon d;
@@ -125,12 +128,14 @@ public class Labirinto {
 		Status.setBounds(238, 11, 186, 14);
 		frmLabirinto.getContentPane().add(Status);
 
-		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
+/*		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
 		textArea.setEditable(false);
 		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
 		textArea.setBounds(238, 36, 186, 214);
 		frmLabirinto.getContentPane().add(textArea);
-
+*/
+		
+		
 		final JButton ExitButton = new JButton("Exit");//sair do programa, alternativa ao X da janela
 		ExitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -151,7 +156,9 @@ public class Labirinto {
 			public void actionPerformed(ActionEvent e) {
 				Status.setText("Moveu-se para a esquerda");
 				turno(2);
-				textArea.setText(maze.printMaze2String());
+				//textArea.setText(maze.printMaze2String());
+				((Panel) gamePanel).setMaze(maze.getFullMaze());
+				gamePanel.repaint();
 				if (!h.isAlive()) {
 					maze.printMaze();
 					Status.setText("Perdeu");
@@ -179,7 +186,9 @@ public class Labirinto {
 			public void actionPerformed(ActionEvent e) {
 				Status.setText("Moveu-se para baixo");
 				turno(1);
-				textArea.setText(maze.printMaze2String());
+				//textArea.setText(maze.printMaze2String());
+				((Panel) gamePanel).setMaze(maze.getFullMaze());
+				gamePanel.repaint();
 				if (!h.isAlive()) {
 					maze.printMaze();
 					Status.setText("Perdeu");
@@ -208,7 +217,9 @@ public class Labirinto {
 			public void actionPerformed(ActionEvent e) {
 				Status.setText("Moveu-se para a direita");
 				turno(3);
-				textArea.setText(maze.printMaze2String());
+				//textArea.setText(maze.printMaze2String());
+				((Panel) gamePanel).setMaze(maze.getFullMaze());
+				gamePanel.repaint();
 				if (!h.isAlive()) {
 					maze.printMaze();
 					Status.setText("Perdeu");
@@ -237,7 +248,9 @@ public class Labirinto {
 			public void actionPerformed(ActionEvent e) {
 				Status.setText("Moveu-se para cima");
 				turno(0);
-				textArea.setText(maze.printMaze2String());
+				//textArea.setText(maze.printMaze2String());
+				((Panel) gamePanel).setMaze(maze.getFullMaze());
+				gamePanel.repaint();
 				if (!h.isAlive()) {
 					maze.printMaze();
 					Status.setText("Perdeu");
@@ -301,6 +314,12 @@ public class Labirinto {
 				s = new Sword(maze);
 				d = new Dragon();
 				d.multipleDragons(Integer.parseInt(numberofdragon.getText()), maze);
+				
+				gamePanel = new Panel(maze);
+				gamePanel.setBounds(238, 36, 195, 214);
+				gamePanel.setVisible(true);
+				frmLabirinto.getContentPane().add(gamePanel);
+				
 				convGameMode();
 				//tornar os botoes de direcao utilizaveis
 				LeftButton.setEnabled(true);
@@ -310,7 +329,9 @@ public class Labirinto {
 				//atualizar o estado do jogo
 				Status.setText("A jogar...");
 				//imprimir o labirinto na textArea
-				textArea.setText(maze.printMaze2String());
+				//textArea.setText(maze.printMaze2String());
+				((Panel) gamePanel).setMaze(maze.getFullMaze());
+				gamePanel.repaint();
 
 
 			}

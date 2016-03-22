@@ -134,7 +134,7 @@ public class Hero extends Point{
 			if (m.getMaze(x, y-1) == 'E'){
 				this.armed = true;
 				m.setMaze(x, y-1, ' ');
-				this.y--;
+				y--;
 			}
 			else if (m.getMaze(x, y-1) == ' ') {
 				m.setMaze(x, y, ' ');

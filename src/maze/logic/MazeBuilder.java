@@ -18,6 +18,10 @@ public class MazeBuilder implements IMazeBuilder {
 	};
 	private char maze[][];
 	private int size;
+	
+	public char[][] getFullMaze(){
+		return maze;
+	}
 
 	public MazeBuilder(){
 		maze = defaultMaze;
