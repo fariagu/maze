@@ -26,7 +26,7 @@ public class MazeBuilder implements IMazeBuilder {
 	public MazeBuilder(){
 		maze = defaultMaze;
 	}
-
+	
 	public MazeBuilder(int s){
 		this.size = s;
 		maze = randomMaze();
@@ -110,7 +110,7 @@ public class MazeBuilder implements IMazeBuilder {
 		return true;
 	}
 
-	public char[][] randomMaze() {
+	public char[][] randomMaze(){
 
 		char[][] tmp = new char[size][size];
 		int vcsize = (size-1) / 2;
@@ -329,7 +329,6 @@ public class MazeBuilder implements IMazeBuilder {
 
 	@Override
 	public char[][] buildMaze(int size) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return new MazeBuilder(size).getFullMaze();
 	}
 }

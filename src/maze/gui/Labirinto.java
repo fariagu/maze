@@ -95,8 +95,6 @@ public class Labirinto {
 		this.downButton = downButton;
 	}
 
-
-
 	public void turn(int direcao){
 		h.setDir(direcao);
 		h.move(maze);
@@ -131,8 +129,6 @@ public class Labirinto {
 		maze.printMaze();
 		gamePanel.requestFocus();
 	}
-
-
 
 	/**
 	 * Launch the application.
@@ -383,7 +379,12 @@ public class Labirinto {
 		StartButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//criar o maze
-				maze = new MazeBuilder(Integer.parseInt(dimension.getText()));
+				try {
+					maze = new MazeBuilder(Integer.parseInt(dimension.getText()));
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				h = new Hero(maze);
 				s = new Sword(maze);
 				d = new Dragon();
