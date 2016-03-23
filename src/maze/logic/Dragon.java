@@ -10,7 +10,7 @@ public class Dragon extends Point{
 	private int fallAsleepCounter;
 	private int sleepCounter;
 	private int wakeUpCounter;
-	static private ArrayList<Dragon> dragons;
+	static private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
 	
 /*
 	public Dragon(MazeBuilder m) {
@@ -55,9 +55,7 @@ public class Dragon extends Point{
 		
 	}
 	
-	public Dragon(){
-		dragons = new ArrayList<Dragon>();
-	}
+	public Dragon(){}
 	
 	public void multipleDragons(int n, MazeBuilder m){
 		for (int i = 0; i < n; i++){

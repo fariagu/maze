@@ -364,14 +364,14 @@ public class Labirinto {
 		lblNewLabel_3.setBounds(10, 39, 113, 14);
 		frmLabirinto.getContentPane().add(lblNewLabel_3);
 
-		dimension = new JTextField();//dimens�o do labirinto NxN
+		dimension = new JTextField();//dimensao do labirinto NxN
 		dimension.setText("11");
 		dimension.setHorizontalAlignment(SwingConstants.RIGHT);
 		dimension.setBounds(129, 36, 99, 20);
 		frmLabirinto.getContentPane().add(dimension);
 		dimension.setColumns(10);
 
-		nDragons = new JTextField();//numero de drag�es presentes no labirinto
+		nDragons = new JTextField();//numero de dragoes presentes no labirinto
 		nDragons.setHorizontalAlignment(SwingConstants.RIGHT);
 		nDragons.setText("1");
 		nDragons.setBounds(129, 61, 99, 20);

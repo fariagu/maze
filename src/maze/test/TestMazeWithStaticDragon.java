@@ -190,7 +190,7 @@ public class TestMazeWithStaticDragon {
 	}
 
 	@Test
-	//herói armado move-se para uma posição adjacente ao dragão e mata-o
+	//heroi armado move-se para uma posicao adjacente ao dragao e mata-o
 	public void testKill() {
 		MazeBuilder maze = new MazeBuilder(m1);
 		Hero h = new Hero(1, 3, maze);
@@ -211,7 +211,7 @@ public class TestMazeWithStaticDragon {
 	}
 
 	@Test
-	//herói move-se para a saída após apanhar a espada e matar o dragão (vitória)
+	//heroi move-se para a saida apos apanhar a espada e matar o dragao (vitoria)
 	public void testExit() {
 		MazeBuilder maze = new MazeBuilder(m5);
 		Hero h = new Hero(1, 1, maze);
@@ -301,7 +301,7 @@ public class TestMazeWithStaticDragon {
 	}
 
 	@Test
-	//herói tenta mover-se sem sucesso para a saída armado mas sem ter morto o dragão
+	//heroi tenta mover-se sem sucesso para a saida armado mas sem ter morto o dragao
 	public void testSwordFailExit() {
 		MazeBuilder maze = new MazeBuilder();
 		Hero h = new Hero(1, 3, maze);
@@ -314,8 +314,8 @@ public class TestMazeWithStaticDragon {
 		h.setDir(1);//down
 		h.move(maze);
 		h.move(maze);
-		//		System.out.print(h.isArmed());
-		//		System.out.print(maze.getMaze(1,2));
+		//System.out.print(h.isArmed());
+		//System.out.print(maze.getMaze(1,2));
 		assertEquals(true, h.isArmed());
 		s.heroOverlap(h, maze);
 		assertEquals(true, s.isCollected());
