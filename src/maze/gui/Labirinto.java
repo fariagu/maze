@@ -101,23 +101,23 @@ public class Labirinto {
 		if (!s.isCollected()){
 			s.heroOverlap(h, maze);
 		}
-		for (int i = 0; i < d.getDragons().size(); i++){
-			if (d.getDragons().get(i).isAlive()) {
-				d.getDragons().get(i).fight(h, maze);
+		for (int i = 0; i < Dragon.getDragons().size(); i++){
+			if (Dragon.getDragons().get(i).isAlive()) {
+				Dragon.getDragons().get(i).fight(h, maze);
 
 				if (mode == 2 || mode == 3){
 					if (mode == 2){
-						d.getDragons().get(i).move(maze);
+						Dragon.getDragons().get(i).move(maze);
 					}
 					if (mode == 3){
-						d.getDragons().get(i).moveOrSleep(maze);
+						Dragon.getDragons().get(i).moveOrSleep(maze);
 					}
-					s.dragonOverlap(d.getDragons().get(i), maze);
-					d.getDragons().get(i).fight(h, maze);
+					Dragon.getDragons().get(i).fight(h, maze);
+					s.dragonOverlap(Dragon.getDragons().get(i), maze);
 				}
 			}
 		}
-
+		
 		if (!h.isAlive()) {
 			System.out.println("Game Over");
 			gamePanel.setFocusable(false);
@@ -382,7 +382,6 @@ public class Labirinto {
 				try {
 					maze = new MazeBuilder(Integer.parseInt(dimension.getText()));
 				} catch (NumberFormatException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				h = new Hero(maze);

@@ -4,30 +4,30 @@ import java.util.Random;
 
 public class Sword extends Point{	
 	private boolean collected;
-/*
+	/*
 	public Sword(MazeBuilder m) {
 		x = 8;
 		y = 1;
 		collected = false;
 		m.printSword(this);
 	}
-*/	
+	 */	
 	public Sword(int x, int y, MazeBuilder m) {
 		this.x = x;
 		this.y = y;
 		collected = false;
 		m.printSword(this);
 	}
-	
+
 	public Sword(MazeBuilder m){
 		int size = m.getSize();
 		int x, y;
 		Random r = new Random();
-		
+
 		while (true){
 			x = r.nextInt(size -1) + 1;
 			y = r.nextInt(size -1) + 1;
-			
+
 			if (m.getMaze(x, y) == ' '){
 				this.x = x;
 				this.y = y;
@@ -37,6 +37,24 @@ public class Sword extends Point{
 		m.printSword(this);
 	}
 
+	public Sword(char[][] m){
+		int size = m.length;
+		int x, y;
+		Random r = new Random();
+
+		while (true){
+			x = r.nextInt(size -1) + 1;
+			y = r.nextInt(size -1) + 1;
+
+			if (m[x][y] == ' '){
+				this.x = x;
+				this.y = y;
+				break;
+			}
+		}
+		m[x][y] = 'E';
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -44,7 +62,7 @@ public class Sword extends Point{
 	public int getY() {
 		return y;
 	}
-	
+
 	public boolean isCollected() {
 		return collected;
 	}
@@ -52,21 +70,29 @@ public class Sword extends Point{
 		this.collected = collected;
 	}
 
-/*	public void print() {
+	/*	public void print() {
 		if (!this.collected){
 			Maze.setMaze(x, y, 'E');
 		}	
 	}
-*/	
+	 */	
 	public void dragonOverlap(Dragon d, MazeBuilder m) {
-		if (this.x == d.x && this.y == d.y) {
+		if (this.x == d.getX() && this.y == d.getY()) {
 			m.setMaze(this.x, this.y, 'F');
 		}
-		else if (!this.isCollected()){
-			m.setMaze(this.x, this.y, 'E');
+		else {
+			m.printSword(this);
 		}
 	}
-	
+
+	public void dragonsOverlap(MazeBuilder m) {
+		if (!this.isCollected()){
+			for (int i = 0; i < Dragon.getDragons().size(); i++){
+				dragonOverlap(Dragon.getDragons().get(i), m);
+			}
+		}
+	}
+
 	public void heroOverlap(Hero h, MazeBuilder m) {
 		if (this.x == h.x && this.y == h.y) {
 			this.setCollected(true);

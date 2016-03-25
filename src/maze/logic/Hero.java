@@ -42,6 +42,25 @@ public class Hero extends Point{
 		
 		m.printHero(this);		
 	}
+	
+	public Hero(char[][] m){
+		int size = m.length;
+		int x, y;
+		Random r = new Random();
+		
+		while (true){
+			x = r.nextInt(size -1) + 1;
+			y = r.nextInt(size -1) + 1;
+			
+			if (m[x][y] == ' '){
+				this.x = x;
+				this.y = y;
+				break;
+			}
+		}
+		
+		m[x][y]	= 'H';	
+	}
 
 	public boolean isArmed() {
 		return armed;

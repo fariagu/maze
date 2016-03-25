@@ -10,7 +10,8 @@ public class Dragon extends Point{
 	private int fallAsleepCounter;
 	private int sleepCounter;
 	private int wakeUpCounter;
-	static private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
+	//static private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
+	static private ArrayList<Dragon> dragons;
 	
 /*
 	public Dragon(MazeBuilder m) {
@@ -26,13 +27,19 @@ public class Dragon extends Point{
 	}*/
 
 	public Dragon(int x, int y, MazeBuilder m) {
+		dragons = new ArrayList<Dragon>();
+		
 		this.x = x;
 		this.y = y;
 		alive = true;
 		m.printDragon(this);
 	}
 	
-	public Dragon(MazeBuilder m){
+	public Dragon(MazeBuilder m, boolean multiple){
+		if (!multiple){
+			dragons = new ArrayList<Dragon>();
+		}
+		
 		int size = m.getSize();
 		int x, y;
 		Random r = new Random();
@@ -42,24 +49,63 @@ public class Dragon extends Point{
 			y = r.nextInt(size -1) + 1;
 			
 			if (m.getMaze(x, y) == ' '){
-				this.x = x;
-				this.y = y;
-				break;
+				
+				if(m.getMaze(x-1, y) != 'H'){
+					if(m.getMaze(x+1, y) != 'H'){
+						if(m.getMaze(x, y-1) != 'H'){
+							if(m.getMaze(x, y+1) != 'H'){
+								this.x = x;
+								this.y = y;
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 		
 		alive = true;
 		m.printDragon(this);
-		
-		
-		
 	}
 	
-	public Dragon(){}
+	public Dragon(char[][] m){
+		dragons = new ArrayList<Dragon>();
+		
+		int size = m.length;
+		int x, y;
+		Random r = new Random();
+		
+		while (true){
+			x = r.nextInt(size -1) + 1;
+			y = r.nextInt(size -1) + 1;
+			
+			if (m[x][y]== ' '){
+				
+				if(m[x-1][y] != 'H'){
+					if(m[x+1][y] != 'H'){
+						if(m[x][y-1] != 'H'){
+							if(m[x][y+1] != 'H'){
+								this.x = x;
+								this.y = y;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		alive = true;
+		m[x][y] = 'D';
+	}
+	
+	public Dragon(){
+		dragons = new ArrayList<Dragon>();
+	}
 	
 	public void multipleDragons(int n, MazeBuilder m){
 		for (int i = 0; i < n; i++){
-			dragons.add(new Dragon(m));
+			dragons.add(new Dragon(m, true));
 		}
 	}
 
@@ -156,7 +202,6 @@ public class Dragon extends Point{
 
 		while(canContinue==false) {
 			dir = r.nextInt(5);
-			//System.out.println(dir);
 
 			switch(dir) {
 			case 0:
