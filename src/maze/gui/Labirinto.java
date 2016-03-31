@@ -271,13 +271,13 @@ public class Labirinto {
 	private void initialize() {
 		frmLabirinto = new JFrame();
 		frmLabirinto.setType(Type.UTILITY);
-		frmLabirinto.setTitle("Labirinto");
-		frmLabirinto.setBounds(100, 100, 450, 300);
+		frmLabirinto.setTitle("Settings");
+		frmLabirinto.setBounds(100, 100, 650, 425);
 		frmLabirinto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLabirinto.getContentPane().setLayout(null);
 
 		status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
-		status.setBounds(238, 11, 186, 14);
+		status.setBounds(10, 400, 186, 14);
 		frmLabirinto.getContentPane().add(status);
 
 /*		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
@@ -390,7 +390,7 @@ public class Labirinto {
 				d.multipleDragons(Integer.parseInt(nDragons.getText()), maze);
 
 				gamePanel = new Panel(/*maze*/);
-				gamePanel.setBounds(238, 36, 195, 214);
+				gamePanel.setBounds(238, 10, 400, 400);
 				gamePanel.setVisible(true);
 				gamePanel.setFocusable(true);
 				gamePanel.addKeyListener(new KeyListener() {

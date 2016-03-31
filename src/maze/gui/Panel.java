@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import maze.logic.MazeBuilder;
 
 public class Panel extends JPanel{
-	private int length = 15;
 	private int x = 0, y = 0;
 	private BufferedImage s_hero, ns_hero, dragon, s_dragon, sword, dsword, wall, exit, empty;
 	private char[][] maze;
@@ -64,6 +63,7 @@ public class Panel extends JPanel{
 	}
 
 	public void paintComponent(Graphics g){
+		int size = 400 / maze.length;
 		super.paintComponent(g);
 
 		for (int i = 0; i < maze.length; i++){
@@ -71,39 +71,39 @@ public class Panel extends JPanel{
 				
 				switch(maze[i][j]){
 				case 'X':
-					g.drawImage(wall, x, y, length, length, null);
+					g.drawImage(wall, x, y, size, size, null);
 					break;
 				case ' ':
-					g.drawImage(empty, x, y, length, length, null);
+					g.drawImage(empty, x, y, size, size, null);
 					break;
 				case 'D':
-					g.drawImage(dragon, x, y, length, length, null);
+					g.drawImage(dragon, x, y, size, size, null);
 					break;
 				case 'd':
-					g.drawImage(s_dragon, x, y, length, length, null);
+					g.drawImage(s_dragon, x, y, size, size, null);
 					break;
 				case 'A':
-					g.drawImage(s_hero, x, y, length, length, null);
+					g.drawImage(s_hero, x, y, size, size, null);
 					break;
 				case 'H':
-					g.drawImage(ns_hero, x, y, length, length, null);
+					g.drawImage(ns_hero, x, y, size, size, null);
 					break;
 				case 'S':
-					g.drawImage(exit, x, y, length, length, null);
+					g.drawImage(exit, x, y, size, size, null);
 					break;
 				case 'E':
-					g.drawImage(sword, x, y, length, length, null);
+					g.drawImage(sword, x, y, size, size, null);
 					break;
 				case 'F':
-					g.drawImage(dsword, x, y, length, length, null);
+					g.drawImage(dsword, x, y, size, size, null);
 					break;
 				default:
 					break;
 				}
-				x+=length;
+				x+=size;
 			}
 			x=0;
-			y+=length;
+			y+=size;
 		}
 		x = 0;
 		y = 0;

@@ -109,6 +109,18 @@ public class MazeBuilder implements IMazeBuilder {
 			}
 		return true;
 	}
+	
+	public int getBlancSpaces() {
+		int res = 0;
+		for (int i = 1; i < maze.length - 1; i++){
+			for (int j = 1; j < maze[i].length - 1; j++){
+				if (maze[i][j] == ' '){
+					res++;
+				}
+			}
+		}
+		return res;
+	}
 
 	public char[][] randomMaze(){
 
