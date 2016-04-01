@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
@@ -277,7 +278,7 @@ public class Labirinto {
 		frmLabirinto.getContentPane().setLayout(null);
 
 		status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
-		status.setBounds(10, 400, 186, 14);
+		status.setBounds(10, 400, 186, 20);
 		frmLabirinto.getContentPane().add(status);
 
 /*		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
@@ -375,12 +376,34 @@ public class Labirinto {
 		nDragons.setColumns(10);
 
 
-		JButton StartButton = new JButton("Start");
+		JButton StartButton = new JButton("Start");//=======================================
 		StartButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//criar o maze
 				try {
-					maze = new MazeBuilder(Integer.parseInt(dimension.getText()));
+					int mSize = Integer.parseInt(dimension.getText());
+					
+					if (mSize > 49){
+						JOptionPane.showMessageDialog(frmLabirinto, "Max size is 49");
+						dimension.setText("49");
+						mSize = 49;
+					}
+					
+					if (mSize < 5){
+						JOptionPane.showMessageDialog(frmLabirinto, "Min size is 5");
+						dimension.setText("5");
+						mSize = 5;
+					}
+					
+					if (mSize % 2 == 0){
+						JOptionPane.showMessageDialog(frmLabirinto, 
+								"Must be an odd number.\n Size will be " + ++mSize);
+						dimension.setText(Integer.toString(mSize));
+					}
+					
+					maze = new MazeBuilder(mSize);
+					
+					
 				} catch (NumberFormatException e1) {
 					e1.printStackTrace();
 				}
