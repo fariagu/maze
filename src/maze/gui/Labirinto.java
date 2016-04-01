@@ -278,7 +278,7 @@ public class Labirinto {
 		frmLabirinto.getContentPane().setLayout(null);
 
 		status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
-		status.setBounds(10, 400, 186, 20);
+		status.setBounds(10, 360, 186, 20);
 		frmLabirinto.getContentPane().add(status);
 
 /*		final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
@@ -405,12 +405,29 @@ public class Labirinto {
 					
 					
 				} catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(frmLabirinto, "Input must be a number");
 					e1.printStackTrace();
 				}
+				
 				h = new Hero(maze);
 				s = new Sword(maze);
 				d = new Dragon();
-				d.multipleDragons(Integer.parseInt(nDragons.getText()), maze);
+				
+				int dNum = Integer.parseInt(nDragons.getText());
+				
+				if (dNum < 1){
+					JOptionPane.showMessageDialog(frmLabirinto, "There must be at least one dragon");
+					nDragons.setText("1");
+					dNum = 1;
+				}
+				
+				if (dNum > maze.getBlancSpaces() - 2){
+					JOptionPane.showMessageDialog(frmLabirinto, "There isn't enough space for all those dragons");
+					dNum = maze.getBlancSpaces() - 2;
+					nDragons.setText(Integer.toString(dNum));
+				}
+				
+				d.multipleDragons(dNum, maze);
 
 				gamePanel = new Panel(/*maze*/);
 				gamePanel.setBounds(238, 10, 400, 400);
