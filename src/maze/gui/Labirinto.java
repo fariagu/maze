@@ -104,6 +104,7 @@ public class Labirinto implements PropertyChangeListener {
 		if (!s.isCollected()){
 			s.heroOverlap(h, maze);
 		}
+		s.setOverlapped(false);
 		for (int i = 0; i < Dragon.getDragons().size(); i++){
 			if (Dragon.getDragons().get(i).isAlive()) {
 				Dragon.getDragons().get(i).fight(h, maze);

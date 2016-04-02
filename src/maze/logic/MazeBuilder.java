@@ -3,6 +3,11 @@ package maze.logic;
 import java.util.Random;
 import java.util.Stack;
 
+/**  
+ * MazeBuilder.java - Class do maze.  
+ * @author Diogo Cruz
+ * @author Gustavo Faria
+ */
 public class MazeBuilder implements IMazeBuilder {
 	private char defaultMaze[][] = {
 			{'X','X','X','X','X','X','X','X','X','X'},
@@ -18,15 +23,26 @@ public class MazeBuilder implements IMazeBuilder {
 	};
 	private char maze[][];
 	private int size;
-	
+
+	/**
+	 * Returna o maze como uma matriz.
+	 * @return Maze na forma char[][].
+	 */
 	public char[][] getFullMaze(){
 		return maze;
 	}
 
+	/**
+	 * Construtor pre-definido do maze.
+	 */
 	public MazeBuilder(){
 		maze = defaultMaze;
 	}
-	
+
+	/**
+	 * Construtor do maze de dimensao s.
+	 * @param s Uma variavel do tipo int.
+	 */
 	public MazeBuilder(int s){
 		this.size = s;
 		maze = randomMaze();
@@ -37,30 +53,62 @@ public class MazeBuilder implements IMazeBuilder {
 		maze = emptyMaze();
 	}
 
+	/**
+	 * Construtor do maze direto, tem que se dar um maze.
+	 * @param m Maze na forma char[][].
+	 */
 	public MazeBuilder(char[][] m){
 		maze = m;
 	}
 
+	/**
+	 * Retorna o valor na posicao (x, y) do maze.
+	 * @param x Variavel do tipo int que representa o numero da linha pretendida.
+	 * @param y Variavel do tipo int que representa o numero da coluna pretendida.
+	 * @return O valor presente na coordenada (x, y) do maze. 
+	 */
 	public char getMaze(int x, int y) {
 		return maze[x][y];
 	}
 
+	/**
+	 * Altera o valor na posicao (x, y) do maze para o valor de val.
+	 * @param x Variavel do tipo int que representa o numero da linha pretendida.
+	 * @param y Variavel do tipo int que representa o numero da coluna pretendida.
+	 * @param val Variavel do tipo char que sera o novo valor da posicao (x, y) do maze. 
+	 */
 	public void setMaze(int x, int y, char val) {
 		maze[x][y] = val;
 	}
 
+	/**
+	 * Altera o valor na posicao p do maze para o valor de val.
+	 * @param p Variavel do tipo Point que representa a posicao no maze.
+	 * @param val Variavel do tipo char que sera o novo valor da posicao p do maze. 
+	 */
 	public void setMaze(Point p, char val) {
 		maze[p.x][p.y] = val;
 	}
 
+	/**
+	 * Retorna a dimensao do maze.
+	 * @return Uma variavel do tipo int.
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * Altera a dimensao do maze.
+	 * @param size Variavel do tipo int.
+	 */
 	public void setSize(int size) {
 		this.size = size;
 	}
 
+	/**
+	 * Escreve na consola o estado atual do maze.
+	 */
 	public void printMaze(){
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){
@@ -69,7 +117,11 @@ public class MazeBuilder implements IMazeBuilder {
 			System.out.println();
 		}
 	}
-	
+
+	/**
+	 * Escreve o estado atual do maze para uma string.
+	 * @return Uma variavel do tipo String.
+	 */
 	public String printMaze2String(){
 		String string="";
 		for (int i = 0; i < maze.length; i++){
@@ -81,6 +133,10 @@ public class MazeBuilder implements IMazeBuilder {
 		return string;
 	}
 
+	/**
+	 * Escreve o valor de h no maze.
+	 * @param h Variavel do tipo Hero.
+	 */
 	public void printHero(Hero h) {
 		if (h.isArmed()){
 			this.setMaze(h.x, h.y, 'A');
@@ -91,6 +147,10 @@ public class MazeBuilder implements IMazeBuilder {
 
 	}
 
+	/**
+	 * Escreve o valor de d no maze.
+	 * @param d Variavel do tipo Dragon.
+	 */
 	public void printDragon(Dragon d){
 		if (d.isSleeping()) {
 			this.setMaze(d.x, d.y, 'd');
@@ -100,12 +160,26 @@ public class MazeBuilder implements IMazeBuilder {
 		}
 	}
 
+	/**
+	 * Escreve o valor de s no maze.
+	 * Se já tiver sido apanhada nao sera desenhada.
+	 * Tem um caso especial para quando tem um Dragon em cima da Sword.
+	 * @param s Variavel do tipo Sword.
+	 */
 	public void printSword(Sword s){
-		if (!s.isCollected()){
-			this.setMaze(s.getX(), s.getY(), 'E');
-		}
+		if (!s.isCollected())
+			if(s.isOverlapped())
+				this.setMaze(s.getX(), s.getY(), 'F');
+			else
+				this.setMaze(s.getX(), s.getY(), 'E');
 	}
 
+	/**
+	 * Verifica quais as posicoes do maze que ja foram visitadas.
+	 * @see MazeBuilder#randomMaze()
+	 * @param m Maze do tipo char[][].
+	 * @return Variavel do tipo boolean.
+	 */
 	public boolean check(char[][] m) {
 		for (int i = 0; i < m.length; i++)
 			for (int j = 0; j < m.length; j++) {
@@ -114,7 +188,11 @@ public class MazeBuilder implements IMazeBuilder {
 			}
 		return true;
 	}
-	
+
+	/**
+	 * Retorna o numero de espacos em branco do maze.
+	 * @return Variavel do tipo int.
+	 */
 	public int getBlancSpaces() {
 		int res = 0;
 		for (int i = 1; i < maze.length - 1; i++){
@@ -143,6 +221,10 @@ public class MazeBuilder implements IMazeBuilder {
 		return m;
 	}
 
+	/**
+	 * Construtor do maze aleatorio.
+	 * @return Maze do tipo char[][].
+	 */
 	public char[][] randomMaze(){
 
 		char[][] tmp = new char[size][size];
@@ -283,7 +365,6 @@ public class MazeBuilder implements IMazeBuilder {
 			}
 			flag1 = false;
 			if (!check(visitedCells)){
-
 				while (!nextTo) {
 					switch (0) {
 					case 0://up
@@ -323,9 +404,7 @@ public class MazeBuilder implements IMazeBuilder {
 							}
 						}
 					}
-
 					if (!nextTo){
-
 						int k = stackMov.pop();
 						switch (k) {
 						case 0://go up
@@ -345,7 +424,6 @@ public class MazeBuilder implements IMazeBuilder {
 							mazeX -= 2;
 							break;
 						}
-
 					}
 				}
 				nextTo = false;
@@ -353,13 +431,13 @@ public class MazeBuilder implements IMazeBuilder {
 			else{
 				flag2 = true;
 			}
-
 		}
 		return tmp;
 	}
 
-
-
+	/**
+	 * Construtor do maze.
+	 */
 	@Override
 	public char[][] buildMaze(int size) throws IllegalArgumentException {
 		return new MazeBuilder(size).getFullMaze();

@@ -3,62 +3,59 @@ package maze.logic;
 import java.util.ArrayList;
 import java.util.Random;
 
-import maze.logic.MazeBuilder;
-
+/**  
+ * Hero.java - Classe do Hero.  
+ * @author Diogo Cruz
+ * @author Gustavo Faria
+ */
 public class Hero extends Point{
 	private boolean armed=false;
 	private boolean alive=true;
 	private boolean mapCleared=false;
 	private boolean finished=false;
 	private int dir;
-/*
-	public Hero(MazeBuilder m) {
-		this.x = 1;
-		this.y = 1;
-		m.printHero(this);
-	}
-*/
+
 	public Hero(int x, int y, MazeBuilder m) {
 		this.x = x;
 		this.y = y;
 		m.printHero(this);
 	}
-	
+
 	public Hero(MazeBuilder m){
 		int size = m.getSize();
 		int x, y;
 		Random r = new Random();
-		
+
 		while (true){
 			x = r.nextInt(size -1) + 1;
 			y = r.nextInt(size -1) + 1;
-			
+
 			if (m.getMaze(x, y) == ' '){
 				this.x = x;
 				this.y = y;
 				break;
 			}
 		}
-		
+
 		m.printHero(this);		
 	}
-	
+
 	public Hero(char[][] m){
 		int size = m.length;
 		int x, y;
 		Random r = new Random();
-		
+
 		while (true){
 			x = r.nextInt(size -1) + 1;
 			y = r.nextInt(size -1) + 1;
-			
+
 			if (m[x][y] == ' '){
 				this.x = x;
 				this.y = y;
 				break;
 			}
 		}
-		
+
 		m[x][y]	= 'H';	
 	}
 
@@ -86,25 +83,21 @@ public class Hero extends Point{
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
-/*
-	public int getDir() {
-		return dir;
-	}*/
+
 	public void setDir(int dir) {
 		this.dir = dir;
 	}
 
 	public void print(MazeBuilder m) {
 		if (this.armed)
-			//m.setMaze(x, y, 'A');
-		m.setMaze(this, 'A');
+			m.setMaze(this, 'A');
 		else
 			m.setMaze(x, y, 'H');
 	}
-	
+
 	public void checkMapCleared(){
 		ArrayList<Dragon> d = Dragon.getDragons();
-		
+
 		for (int i = 0; i < d.size(); i++){
 			if(d.get(i).isAlive()){
 				return;
@@ -187,6 +180,4 @@ public class Hero extends Point{
 			break;
 		}
 	}
-
-
 }

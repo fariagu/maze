@@ -85,6 +85,7 @@ public class Game {
 				s.heroOverlap(h, maze);
 			}
 
+			s.setOverlapped(false);
 			for (int i = 0; i < d.getDragons().size(); i++){
 				if (d.getDragons().get(i).isAlive()) {
 					d.getDragons().get(i).fight(h, maze);
