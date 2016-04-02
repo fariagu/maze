@@ -394,20 +394,21 @@ public class Labirinto implements PropertyChangeListener {
 
 					if (mSize > 49){
 						JOptionPane.showMessageDialog(frmLabirinto, "Max size is 49");
-						dimension.setText("49");
+						dimension.setValue(new Integer(49));//valor maximo
+
 						mSize = 49;
 					}
 
 					if (mSize < 5){
 						JOptionPane.showMessageDialog(frmLabirinto, "Min size is 5");
-						dimension.setText("5");
+						dimension.setValue(new Integer(5));
 						mSize = 5;
 					}
 
 					if (mSize % 2 == 0){
 						JOptionPane.showMessageDialog(frmLabirinto, 
 								"Must be an odd number.\n Size will be " + ++mSize);
-						dimension.setText(Integer.toString(mSize));
+						dimension.setValue(new Integer(mSize));
 					}
 
 					maze = new MazeBuilder(mSize);
