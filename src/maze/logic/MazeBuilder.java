@@ -47,7 +47,12 @@ public class MazeBuilder implements IMazeBuilder {
 		this.size = s;
 		maze = randomMaze();
 	}
-	
+
+	/**
+	 * Construtor do maze com o rato de dimensao s.
+	 * @param s Variavel do tipo int.
+	 * @param i Variavel para escolher o rato.
+	 */
 	public MazeBuilder(int s, int i){
 		this.size = s;
 		maze = emptyMaze();
@@ -204,20 +209,20 @@ public class MazeBuilder implements IMazeBuilder {
 		}
 		return res;
 	}
-	
+
+	/**
+	 * Cria um Maze vazio mas com as bordas.
+	 * @return Maze na forma de char[][].
+	 */
 	public char[][] emptyMaze(){
 		char[][] m = new char[size][size];
 		
-		for (int i = 0; i < size; i++){
-			for (int j = 0; j < size; j++){
-				if (i == 0 || i == size-1 || j == 0 || j == size-1){
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				if (i == 0 || i == size-1 || j == 0 || j == size-1)
 					m[i][j] = 'X';
-				}
-				else {
+				else
 					m[i][j] = ' ';
-				}
-			}
-		}
 		return m;
 	}
 
@@ -226,7 +231,6 @@ public class MazeBuilder implements IMazeBuilder {
 	 * @return Maze do tipo char[][].
 	 */
 	public char[][] randomMaze(){
-
 		char[][] tmp = new char[size][size];
 		int vcsize = (size-1) / 2;
 		char[][] visitedCells = new char[vcsize][vcsize];
@@ -239,47 +243,40 @@ public class MazeBuilder implements IMazeBuilder {
 		int yExit = 0;
 		Stack<Integer> stackMov = new Stack<Integer>();
 
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
 				if ((i % 2 != 0) && (j % 2 != 0))
 					tmp[i][j] = ' ';
 				else
 					tmp[i][j] = 'X';
-			}
-		}
-		//creating exit
 
+		//creating exit
 		Random r = new Random();
 		int num = r.nextInt(2);
 		if (num == 0) { // horizontal
 			xExit = r.nextInt(2) * size;
 			yExit = r.nextInt(size - 2) + 1;
-			if (xExit == 0) {
+			if (xExit == 0)
 				pointMX = 1;
-
-			} else
+			else
 				pointMX = size - 2;
 			pointMY = yExit;
 		}
 		if (num == 1) { // vertical
 			xExit = r.nextInt(size - 2) + 1;
 			yExit = r.nextInt(2) * size;
-			if (yExit == 0) {
+			if (yExit == 0)
 				pointMY = 1;
-			} else
+			else
 				pointMY = size - 2;
 			pointMX = xExit;
 		}
-
-		if (xExit == size){
+		if (xExit == size)
 			xExit--;
-		}
-		if (yExit == size){
+		if (yExit == size)
 			yExit--;
-		}
 		tmp[yExit][xExit] = 'S';
 		tmp[pointMY][pointMX] = ' ';
-
 
 		for (int i = 0; i < visitedCells.length; i++)
 			for (int j = 0; j < visitedCells.length; j++)
@@ -295,11 +292,11 @@ public class MazeBuilder implements IMazeBuilder {
 				int mov = rand.nextInt(4);
 				switch (mov) {
 				case 0://up
-					if (vcy < 1) {
+					if (vcy < 1)
 						flag1 = false;
-					} else if (visitedCells[vcy - 1][vcx] == '+') {
+					else if (visitedCells[vcy - 1][vcx] == '+')
 						flag1 = false;
-					} else {
+					else {
 						vcy--;
 						visitedCells[vcy][vcx] = '+';
 						tmp[mazeY-1][mazeX] = ' ';
@@ -310,11 +307,11 @@ public class MazeBuilder implements IMazeBuilder {
 					}
 					break;
 				case 1://down
-					if (vcy > (vcsize - 2)) {
+					if (vcy > (vcsize - 2))
 						flag1 = false;
-					} else if (visitedCells[vcy + 1][vcx] == '+') {
+					else if (visitedCells[vcy + 1][vcx] == '+')
 						flag1 = false;
-					} else {
+					else {
 						vcy++;
 						visitedCells[vcy][vcx] = '+';
 						tmp[mazeY][mazeX] = ' ';
@@ -327,11 +324,11 @@ public class MazeBuilder implements IMazeBuilder {
 					}
 					break;
 				case 2://left
-					if (vcx < 1) {
+					if (vcx < 1)
 						flag1 = false;
-					} else if (visitedCells[vcy][vcx - 1] == '+') {
+					else if (visitedCells[vcy][vcx - 1] == '+')
 						flag1 = false;
-					} else {
+					else {
 						vcx--;
 						visitedCells[vcy][vcx] = '+';
 						tmp[mazeY][mazeX] = ' ';
@@ -344,11 +341,11 @@ public class MazeBuilder implements IMazeBuilder {
 					}
 					break;
 				case 3://right
-					if (vcx > (vcsize - 2)) {
+					if (vcx > (vcsize - 2))
 						flag1 = false;
-					} else if (visitedCells[vcy][vcx + 1] == '+') {
+					else if (visitedCells[vcy][vcx + 1] == '+')
 						flag1 = false;
-					} else {
+					else {
 						vcx++;
 						visitedCells[vcy][vcx] = '+';
 						tmp[mazeY][mazeX] = ' ';
@@ -361,48 +358,39 @@ public class MazeBuilder implements IMazeBuilder {
 					}
 					break;
 				}
-
 			}
 			flag1 = false;
 			if (!check(visitedCells)){
-				while (!nextTo) {
-					switch (0) {
+				while (!nextTo){
+					switch (0){
 					case 0://up
-						if (vcy >= 1) {
-							if (visitedCells[vcy - 1][vcx] == '+') {
-
-							} else {
+						if (vcy >= 1)
+							if (visitedCells[vcy - 1][vcx] == '+') {} 
+							else {
 								nextTo = true;
 								break;
-							} 
-						}
+							}
 					case 1://down
-						if (vcy < (vcsize-1)) {
-							if (visitedCells[vcy + 1][vcx] == '+') {
-
-							} else {
+						if (vcy < (vcsize-1))
+							if (visitedCells[vcy + 1][vcx] == '+') {}
+							else {
 								nextTo = true;
 								break;
 							}
-						}
 					case 2://left
-						if (vcx >= 1) {
-							if (visitedCells[vcy][vcx - 1] == '+') {
-
-							} else {
+						if (vcx >= 1)
+							if (visitedCells[vcy][vcx - 1] == '+') {} 
+							else {
 								nextTo = true;
 								break;
 							}
-						}
 					case 3://right
-						if (vcx < (vcsize-1)) {
-							if (visitedCells[vcy][vcx + 1] == '+') {
-
-							} else {
+						if (vcx < (vcsize-1))
+							if (visitedCells[vcy][vcx + 1] == '+') {}
+							else {
 								nextTo = true;
 								break;
 							}
-						}
 					}
 					if (!nextTo){
 						int k = stackMov.pop();
