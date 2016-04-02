@@ -31,6 +31,11 @@ public class MazeBuilder implements IMazeBuilder {
 		this.size = s;
 		maze = randomMaze();
 	}
+	
+	public MazeBuilder(int s, int i){
+		this.size = s;
+		maze = emptyMaze();
+	}
 
 	public MazeBuilder(char[][] m){
 		maze = m;
@@ -120,6 +125,22 @@ public class MazeBuilder implements IMazeBuilder {
 			}
 		}
 		return res;
+	}
+	
+	public char[][] emptyMaze(){
+		char[][] m = new char[size][size];
+		
+		for (int i = 0; i < size; i++){
+			for (int j = 0; j < size; j++){
+				if (i == 0 || i == size-1 || j == 0 || j == size-1){
+					m[i][j] = 'X';
+				}
+				else {
+					m[i][j] = ' ';
+				}
+			}
+		}
+		return m;
 	}
 
 	public char[][] randomMaze(){

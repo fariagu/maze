@@ -32,7 +32,7 @@ public class Labirinto implements PropertyChangeListener {
 	private JComboBox comboBox;
 	private JPanel gamePanel;
 	private JLabel status;
-	private MazeBuilder maze; //o nosso maze. Ainda se tem que ver a privacidade
+	private MazeBuilder maze;
 	private Hero h;
 	private Dragon d;
 	private Sword s;
@@ -42,8 +42,7 @@ public class Labirinto implements PropertyChangeListener {
 	private JButton rightButton;
 	private JButton upButton;
 	private JButton downButton;
-
-
+	
 	private JFormattedTextField dimension;
 	private JFormattedTextField nDragons;
 	private NumberFormat nFormat = NumberFormat.getNumberInstance();
@@ -300,6 +299,15 @@ public class Labirinto implements PropertyChangeListener {
 		});
 		ExitButton.setBounds(109, 227, 89, 23);
 		frmLabirinto.getContentPane().add(ExitButton);
+		
+		final JButton createMaze = new JButton("Create Maze");
+		createMaze.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				new MazeCreator();
+			}
+		});
+		createMaze.setBounds(10, 300, 150, 23);
+		frmLabirinto.getContentPane().add(createMaze);
 
 		leftButton = new JButton("<");
 		downButton = new JButton("v");
@@ -439,7 +447,7 @@ public class Labirinto implements PropertyChangeListener {
 				
 				d.multipleDragons(dNum, maze);
 
-				gamePanel = new Panel(/*maze*/);
+				gamePanel = new Panel();
 				gamePanel.setBounds(238, 10, 400, 400);
 				gamePanel.setVisible(true);
 				gamePanel.setFocusable(true);
