@@ -17,8 +17,8 @@ public class Hero extends Point{
 
 	/**
 	 * Construtor do Hero nas coordenadas (x, y) do maze m.
-	 * @param x Variavel do tipo int.
-	 * @param y Variavel do tipo int.
+	 * @param x Variavel do tipo int para a linha.
+	 * @param y Variavel do tipo int para a coluna.
 	 * @param m Maze na forma de MazeBuilder.
 	 */
 	public Hero(int x, int y, MazeBuilder m) {
@@ -147,7 +147,7 @@ public class Hero extends Point{
 	/**
 	 * Altera a direcao para onde o Hero se vai deslocar.
 	 * @see Hero#move(MazeBuilder m)
-	 * @param dir Variavel do tipo boolean.
+	 * @param dir Variavel do tipo int.
 	 */
 	public void setDir(int dir) {
 		this.dir = dir;

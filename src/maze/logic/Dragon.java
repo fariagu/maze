@@ -19,8 +19,8 @@ public class Dragon extends Point{
 
 	/**
 	 * Constroi um Dragon na posicao (x, y) em m.
-	 * @param x Variavel do tipo int.
-	 * @param y Variavel do tipo int.
+	 * @param x Variavel do tipo int para a linha.
+	 * @param y Variavel do tipo int para a coluna.
 	 * @param m Maze na forma de MazeBuilder.
 	 */
 	public Dragon(int x, int y, MazeBuilder m) {

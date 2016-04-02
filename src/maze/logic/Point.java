@@ -11,8 +11,8 @@ public class Point{
 	
 	/**
 	 * Construtor de uma coordenada na forma de (x, y).
-	 * @param x Variavel do tipo int.
-	 * @param y Variavel do tipo int.
+	 * @param x Variavel do tipo int para a linha.
+	 * @param y Variavel do tipo int para a coluna.
 	 */
 	public Point(int x, int y) {
 		this.x = x;
@@ -29,7 +29,7 @@ public class Point{
 	
 	/**
 	 * Retorna a linha em que se encontra.
-	 * @return Variavel do tipo int.
+	 * @return Variavel do tipo int que representa a linha.
 	 */
 	public int getX() {
 		return this.x;
@@ -37,7 +37,7 @@ public class Point{
 
 	/**
 	 * Retorna a coluna em que se encontra.
-	 * @return Variavel do tipo int.
+	 * @return Variavel do tipo int que representa a coluna.
 	 */
 	public int getY() {
 		return this.y;

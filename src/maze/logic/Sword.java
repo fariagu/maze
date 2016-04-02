@@ -13,9 +13,9 @@ public class Sword extends Point{
 
 	/**
 	 * Construtor de uma Sword na posicao (x, y) em m.
-	 * @param x Variavel do tipo int.
-	 * @param y Variavel do tipo int.
-	 * @param m Variavel do tipo MazeBuilder.
+	 * @param x Variavel do tipo int para a linha.
+	 * @param y Variavel do tipo int para a coluna.
+	 * @param m Maze na forma de MazeBuilder.
 	 */
 	public Sword(int x, int y, MazeBuilder m) {
 		this.x = x;
