@@ -49,7 +49,7 @@ public class MazeCreator implements PropertyChangeListener {
 
 	private NumberFormat nFormat = NumberFormat.getNumberInstance();
 
-	public MazeCreator(){
+	public MazeCreator(final Labirinto l){
 		editorFrame = new JFrame();
 		editorFrame.setType(Type.UTILITY);
 		editorFrame.setTitle("Create Maze");
@@ -162,6 +162,16 @@ public class MazeCreator implements PropertyChangeListener {
 					done.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							if (hasExit && hasHero && hasSword){
+								l.setMaze(maze);
+								l.setGamePanel(new Panel());
+								l.getGamePanel().setBounds(238, 10, 400, 400);
+								l.getGamePanel().setVisible(true);
+								l.getGamePanel().setFocusable(true);
+								l.getFrmLabirinto().getContentPane().add(l.getGamePanel());
+								l.getGamePanel().requestFocus();
+								
+								((Panel) l.getGamePanel()).setMaze(maze.getFullMaze());
+								l.getGamePanel().repaint();
 								editorFrame.dispose();
 							}
 							else {

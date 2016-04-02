@@ -33,6 +33,7 @@ public class Labirinto implements PropertyChangeListener {
 	private JPanel gamePanel;
 	private JLabel status;
 	private MazeBuilder maze;
+	public static MazeBuilder m;//<---------------------
 	private Hero h;
 	private Dragon d;
 	private Sword s;
@@ -48,7 +49,14 @@ public class Labirinto implements PropertyChangeListener {
 	private NumberFormat nFormat = NumberFormat.getNumberInstance();
 	private int nDim = 11;
 	private int nDra = 1;
+	
 
+	public JFrame getFrmLabirinto() {
+		return frmLabirinto;
+	}
+	public void setFrmLabirinto(JFrame frmLabirinto) {
+		this.frmLabirinto = frmLabirinto;
+	}
 	public JPanel getGamePanel() {
 		return gamePanel;
 	}
@@ -303,7 +311,7 @@ public class Labirinto implements PropertyChangeListener {
 		final JButton createMaze = new JButton("Create Maze");
 		createMaze.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				new MazeCreator();
+				new MazeCreator(Labirinto.this);
 			}
 		});
 		createMaze.setBounds(10, 300, 150, 23);
