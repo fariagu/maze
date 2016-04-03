@@ -80,6 +80,18 @@ public class Labirinto implements PropertyChangeListener {
 	public void setH(Hero h) {
 		this.h = h;
 	}	
+	public Dragon getD() {
+		return d;
+	}
+	public void setD(Dragon d) {
+		this.d = d;
+	}
+	public Sword getS() {
+		return s;
+	}
+	public void setS(Sword s) {
+		this.s = s;
+	}
 	public JButton getLeftButton() {
 		return leftButton;
 	}
@@ -157,8 +169,8 @@ public class Labirinto implements PropertyChangeListener {
 		});
 	}
 
-	public void convGameMode(){
-		String s = (String) comboBox.getSelectedItem();
+	public void convGameMode(String s){
+		// s = (String) comboBox.getSelectedItem();
 
 		switch (s){
 		case "Useless":
@@ -283,7 +295,7 @@ public class Labirinto implements PropertyChangeListener {
 		frmLabirinto = new JFrame();
 		frmLabirinto.setType(Type.UTILITY);
 		frmLabirinto.setTitle("Settings");
-		frmLabirinto.setBounds(100, 100, 650, 425);
+		frmLabirinto.setBounds(100, 100, 650, 450);
 		frmLabirinto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLabirinto.getContentPane().setLayout(null);
 
@@ -495,7 +507,7 @@ public class Labirinto implements PropertyChangeListener {
 				frmLabirinto.getContentPane().add(gamePanel);
 				gamePanel.requestFocus();
 
-				convGameMode();
+				convGameMode((String) comboBox.getSelectedItem());
 				//tornar os botoes de direcao utilizaveis
 				leftButton.setEnabled(true);
 				downButton.setEnabled(true);

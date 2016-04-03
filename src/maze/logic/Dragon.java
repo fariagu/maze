@@ -32,6 +32,17 @@ public class Dragon extends Point{
 		m.printDragon(this);
 	}
 	
+	public Dragon(int x, int y, MazeBuilder m, boolean multiple) {
+		if (!multiple){
+			dragons = new ArrayList<Dragon>();
+		}
+
+		this.x = x;
+		this.y = y;
+		alive = true;
+		m.printDragon(this);
+	}
+	
 	/**
 	 * Construtor de Dragon em m num Point aleatorio.
 	 * Garante que nao esta perto do heroi.
