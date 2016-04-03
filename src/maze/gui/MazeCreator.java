@@ -127,6 +127,10 @@ public class MazeCreator implements PropertyChangeListener {
 
 					start.setEnabled(false);
 					start.setVisible(false);
+					gameMode.setEnabled(false);
+					gameMode.setVisible(false);
+					modeLabel.setEnabled(false);
+					modeLabel.setVisible(false);
 
 					editorFrame.getContentPane().remove(sizeField);
 					editorFrame.repaint();
