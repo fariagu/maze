@@ -1,8 +1,13 @@
 package maze.logic;
 
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
 
+/**  
+ * Dragon.java - Classe do Dragon.  
+ * @author Diogo Cruz
+ * @author Gustavo Faria
+ */
 public class Dragon extends Point{
 	private boolean alive;
 	private boolean sleeping;
@@ -10,46 +15,45 @@ public class Dragon extends Point{
 	private int fallAsleepCounter;
 	private int sleepCounter;
 	private int wakeUpCounter;
-	//static private ArrayList<Dragon> dragons = new ArrayList<Dragon>();
 	static private ArrayList<Dragon> dragons;
-	
-/*
-	public Dragon(MazeBuilder m) {
-		x = 3;
-		y = 1;
-		alive = true;
-		sleeping = false;
-		moveCounter = 0;
-		fallAsleepCounter = -1;
-		sleepCounter = -1;
-		wakeUpCounter = -1;
-		m.printDragon(this);
-	}*/
 
+	/**
+	 * Constroi um Dragon na posicao (x, y) em m.
+	 * @param x Variavel do tipo int para a linha.
+	 * @param y Variavel do tipo int para a coluna.
+	 * @param m Maze na forma de MazeBuilder.
+	 */
 	public Dragon(int x, int y, MazeBuilder m) {
 		dragons = new ArrayList<Dragon>();
-		
+
 		this.x = x;
 		this.y = y;
 		alive = true;
 		m.printDragon(this);
 	}
 	
+	/**
+	 * Construtor de Dragon em m num Point aleatorio.
+	 * Garante que nao esta perto do heroi.
+	 * Serve para quando se quer ter mais que um Dragon no maze
+	 * @param m Maze na forma de MazeBuilder.
+	 * @param multiple Variavel do tipo boolean.
+	 */
 	public Dragon(MazeBuilder m, boolean multiple){
 		if (!multiple){
 			dragons = new ArrayList<Dragon>();
 		}
-		
+
 		int size = m.getSize();
 		int x, y;
 		Random r = new Random();
-		
+
 		while (true){
 			x = r.nextInt(size -1) + 1;
 			y = r.nextInt(size -1) + 1;
-			
+
 			if (m.getMaze(x, y) == ' '){
-				
+
 				if(m.getMaze(x-1, y) != 'H'){
 					if(m.getMaze(x+1, y) != 'H'){
 						if(m.getMaze(x, y-1) != 'H'){
@@ -63,24 +67,28 @@ public class Dragon extends Point{
 				}
 			}
 		}
-		
 		alive = true;
 		m.printDragon(this);
 	}
-	
+
+	/**
+	 * Construtor de um Dragon em m.
+	 * Garante que nao esta perto do heroi.
+	 * @param m Maze na forma de char[][].
+	 */
 	public Dragon(char[][] m){
 		dragons = new ArrayList<Dragon>();
-		
+
 		int size = m.length;
 		int x, y;
 		Random r = new Random();
-		
+
 		while (true){
 			x = r.nextInt(size -1) + 1;
 			y = r.nextInt(size -1) + 1;
-			
+
 			if (m[x][y]== ' '){
-				
+
 				if(m[x-1][y] != 'H'){
 					if(m[x+1][y] != 'H'){
 						if(m[x][y-1] != 'H'){
@@ -94,89 +102,74 @@ public class Dragon extends Point{
 				}
 			}
 		}
-		
 		alive = true;
 		m[x][y] = 'D';
 	}
-	
+
+	/**
+	 * Inicializa a ArrayList para ter mais que um dragao no maze.
+	 */
 	public Dragon(){
 		dragons = new ArrayList<Dragon>();
 	}
-	
+
+	/**
+	 * Construtor de n Dragons em m.
+	 * @param n Variavel do tipo int.
+	 * @param m Maze na forma de MazeBuilder.
+	 */
 	public void multipleDragons(int n, MazeBuilder m){
 		for (int i = 0; i < n; i++){
 			dragons.add(new Dragon(m, true));
 		}
 	}
 
+	/**
+	 * Retorna o estado alive do Dragon.
+	 * Usado para confirmar que todos os Dragons estao mortos e o Hero pode acabar o jogo.
+	 * @return Um boolean.
+	 */
 	public boolean isAlive() {
 		return alive;
 	}
 
+	/**
+	 * Altera a variavel alive do Dragon.
+	 * @param alive Variavel do tipo boolean.
+	 */
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 	}
 
+	/**
+	 * Retorna do estado sleeping do Dragon.
+	 * @return Um boolean.
+	 */
 	public boolean isSleeping() {
 		return sleeping;
 	}
-	
+
+	/**
+	 * Retorna um ArrayList com todos os Dragons do maze para consulta.
+	 * @return ArrayList com todos os Dragon do maze.
+	 */
 	public static ArrayList<Dragon> getDragons() {
 		return dragons;
 	}
 
+	/**
+	 * Altera o conjunto de Dragons do maze.
+	 * @param dragons Variavel do tipo ArrayList com todos os Dragon.
+	 */
 	public void setDragons(ArrayList<Dragon> dragons) {
 		this.dragons = dragons;
 	}
 
-	/*
-	public void setSleeping(boolean sleeping) {
-		this.sleeping = sleeping;
-	}
-
-	public int getMoveCounter() {
-		return this.moveCounter;
-	}
-
-	public void setMoveCounter(int moveCounter) {
-		this.moveCounter = moveCounter;
-	}
-
-	public int getFallAsleepCounter() {
-		return fallAsleepCounter;
-	}
-
-	public void setFallAsleepCounter(int fallAsleepCounter) {
-		this.fallAsleepCounter = fallAsleepCounter;
-	}
-
-	public int getSleepCounter() {
-		return sleepCounter;
-	}
-
-	public void setSleepCounter(int sleepCounter) {
-		this.sleepCounter = sleepCounter;
-	}
-
-	public int getWakeUpCounter() {
-		return wakeUpCounter;
-	}
-
-	public void setWakeUpCounter(int wakeUpCounter) {
-		this.wakeUpCounter = wakeUpCounter;
-	}
-*/
-	/*	public void print() {
-		if (alive){
-			if (!sleeping){
-				Maze.setMaze(x, y, 'D');
-			}
-			else {
-				Maze.setMaze(x, y, 'd');
-			}
-
-		}
-	}
+	/**
+	 * Faz a luta entre h e os Dragons.
+	 * So ha luta se o Dragon estiver perto do Hero.
+	 * @param h Variavel do tipo Hero.
+	 * @param m Maze na forma de MazeBuilder.
 	 */
 	public void fight(Hero h, MazeBuilder m){
 		if (	((this.x == h.x)&&(this.y == (h.y + 1))) ||
@@ -195,6 +188,10 @@ public class Dragon extends Point{
 		}
 	}
 
+	/**
+	 * Muda a posicao do Dragon de forma aleatoria.
+	 * @param m Maze na forma de MazeBuilder.
+	 */
 	public void move(MazeBuilder m){
 		Random r = new Random();
 		int dir = 4;
@@ -264,22 +261,43 @@ public class Dragon extends Point{
 		}
 	}
 
+	/**
+	 * Muda o valor de moveCounter para o default.
+	 * @see  Dragon#moveOrSleep(MazeBuilder m)
+	 */
 	public void resetMoveCounter(){
 		moveCounter = -1;
 	}
 
+	/**
+	 * Muda o valor de fallAsleepCounter para o default.
+	 * @see  Dragon#moveOrSleep(MazeBuilder m)
+	 */
 	public void resetFallAsleepCounter(){
 		fallAsleepCounter = -1;
 	}
 
+	/**
+	 * Muda o valor de sleepCounter para o default.
+	 * @see  Dragon#moveOrSleep(MazeBuilder m)
+	 */
 	public void resetSleepCounter(){
 		sleepCounter = -1;
 	}
 
+	/**
+	 * Muda o valor de wakeUpCounter para o default.
+	 * @see  Dragon#moveOrSleep(MazeBuilder m)
+	 */
 	public void resetWakeUpCounter(){
 		wakeUpCounter = -1;
 	}
 
+	/**
+	 * Move o Dragon ou adormece-o aleatoriamente.
+	 * Ao fim de alguns movimentos o Dragon ira parar ou adormecer ou acordar.
+	 * @param m Maze na forma de MazeBuilder.
+	 */
 	public void moveOrSleep(MazeBuilder m){
 		Random r = new Random();
 

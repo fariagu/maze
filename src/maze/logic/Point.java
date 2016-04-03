@@ -1,37 +1,56 @@
 package maze.logic;
 
+/**  
+ * Point.java - Classe da Point.  
+ * @author Diogo Cruz
+ * @author Gustavo Faria
+ */
 public class Point{
 	protected int x;
 	protected int y;
 	
+	/**
+	 * Construtor de uma coordenada na forma de (x, y).
+	 * @param x Variavel do tipo int para a linha.
+	 * @param y Variavel do tipo int para a coluna.
+	 */
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
+	
+	/**
+	 * Construtor generico de um Point.
+	 */
 	public Point() {
 		this.x = 1;
 		this.y = 1;
 	}
 	
+	/**
+	 * Retorna a linha em que se encontra.
+	 * @return Variavel do tipo int que representa a linha.
+	 */
 	public int getX() {
 		return this.x;
 	}
-/*	
-	public void setX(int x) {
-		this.x = x;
-	}
-*/	
+
+	/**
+	 * Retorna a coluna em que se encontra.
+	 * @return Variavel do tipo int que representa a coluna.
+	 */
 	public int getY() {
 		return this.y;
 	}
-/*	
-	public void setY(int y) {
-		this.y = y;
-	}
-*/	/*
-	public Point getPos(){
-		//Point p = new Point(this.x, this.y);
-		return this;
-	}*/
 	
+//	/**
+//	 * Compara 2 Point pelas suas coordenadas x e y.
+//	 * @param p2 Point a comparar.
+//	 * @return Variavel to tipo Boolean.
+//	 */
+//	public boolean equals(Point p2) {
+//		if(this.x == p2.getX() && this.y == p2.getY())
+//			return true;
+//		return false;
+//	}
 }
