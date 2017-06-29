@@ -1,10 +1,10 @@
 import logic.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Arrays;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMazeBuilder {
     // Auxiliary class
@@ -132,17 +132,18 @@ public class TestMazeBuilder {
             Hero h = new Hero(m);
             Dragon d = new Dragon(m);
             Sword s = new Sword(m);
-            /*assertTrue("Invalid maze boundaries in maze:\n" + m, checkBoundaries(m));
-            assertTrue("Invalid walls in maze:\n" + m, !hasSquare(m, badWalls));
-            assertTrue("Invalid spaces in maze:\n" + m, !hasSquare(m, badSpaces));
-            assertTrue("Invalid diagonals in maze:\n" + m, !hasSquare(m, badDiagonalDown));
-            assertTrue("Invalid diagonals in maze:\n" + m, !hasSquare(m, badDiagonalUp));
-            assertTrue("Maze exit not reachable in maze:\n" + m, checkExitReachable(m));
-            assertNotNull("Missing exit in maze:\n" + m, findPos(m, 'S'));
-            assertNotNull("Missing hero in maze:\n" + m, findPos(m, 'H'));
-            assertNotNull("Missing dragon in maze:\n" + m, findPos(m, 'D'));
-            assertNotNull("Missing sword in maze:\n" + m, findPos(m, 'E'));
-            assertFalse("Adjacent hero and dragon in maze:\n" + str(m), findPos(m, 'H').adjacentTo(findPos(m, 'D')));*/
+
+            assertTrue(checkBoundaries(m), "Invalid maze boundaries in maze " + i + " weren't detected.");
+            assertTrue(!hasSquare(m, badWalls), "Invalid walls in maze " + i + "weren't detected.");
+            assertTrue(!hasSquare(m, badSpaces), "Invalid spaces in maze " + i + "weren't detected.");
+            assertTrue(!hasSquare(m, badDiagonalDown), "Invalid diagonals in maze " + i + "weren't detected.");
+            assertTrue(!hasSquare(m, badDiagonalUp), "Invalid diagonals in maze " + i + "weren't detected.");
+            assertTrue(checkExitReachable(m), "Exit not reachable in maze " + i);
+            assertNotNull(findPos(m, 'S'), "Missing exit in maze " + i);
+            assertNotNull(findPos(m, 'H'), "Missing hero in maze " + i);
+            assertNotNull(findPos(m, 'D'), "Missing dragon in maze " + i);
+            assertNotNull(findPos(m, 'E'), "Missing sword in maze " + i);
+            assertFalse(findPos(m, 'H').adjacentTo(findPos(m, 'D')), "Adjacent hero and dragon in maze " + i);
         }
     }
 
