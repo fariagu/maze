@@ -1,8 +1,7 @@
-package maze.test;
+import logic.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import maze.logic.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestMazeWithMovingDragon {
 
