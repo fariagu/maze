@@ -16,7 +16,7 @@ public class Dragon extends Point {
     private int fallAsleepCounter;
     private int sleepCounter;
     private int wakeUpCounter;
-    static private ArrayList<Dragon> dragons;
+    private static ArrayList<Dragon> dragons;
 
     /**
      * Constroi um Dragon na posicao (x, y) em m.
@@ -26,7 +26,7 @@ public class Dragon extends Point {
      * @param m Maze na forma de MazeBuilder.
      */
     public Dragon(int x, int y, MazeBuilder m) {
-        dragons = new ArrayList<Dragon>();
+        dragons = new ArrayList<>();
 
         this.x = x;
         this.y = y;
@@ -36,7 +36,7 @@ public class Dragon extends Point {
 
     public Dragon(int x, int y, MazeBuilder m, boolean multiple) {
         if (!multiple) {
-            dragons = new ArrayList<Dragon>();
+            dragons = new ArrayList<>();
         }
 
         this.x = x;
@@ -55,7 +55,7 @@ public class Dragon extends Point {
      */
     public Dragon(MazeBuilder m, boolean multiple) {
         if (!multiple) {
-            dragons = new ArrayList<Dragon>();
+            dragons = new ArrayList<>();
         }
 
         int size = m.getSize();
@@ -92,7 +92,7 @@ public class Dragon extends Point {
      * @param m Maze na forma de char[][].
      */
     public Dragon(char[][] m) {
-        dragons = new ArrayList<Dragon>();
+        dragons = new ArrayList<>();
 
         int size = m.length;
         int x, y;
@@ -125,7 +125,7 @@ public class Dragon extends Point {
      * Inicializa a ArrayList para ter mais que um dragao no maze.
      */
     public Dragon() {
-        dragons = new ArrayList<Dragon>();
+        dragons = new ArrayList<>();
     }
 
     /**
@@ -151,15 +151,6 @@ public class Dragon extends Point {
     }
 
     /**
-     * Altera a variavel alive do Dragon.
-     *
-     * @param alive Variavel do tipo boolean.
-     */
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
-    /**
      * Retorna do estado sleeping do Dragon.
      *
      * @return Um boolean.
@@ -175,15 +166,6 @@ public class Dragon extends Point {
      */
     public static ArrayList<Dragon> getDragons() {
         return dragons;
-    }
-
-    /**
-     * Altera o conjunto de Dragons do maze.
-     *
-     * @param dragons Variavel do tipo ArrayList com todos os Dragon.
-     */
-    public void setDragons(ArrayList<Dragon> dragons) {
-        this.dragons = dragons;
     }
 
     /**
@@ -203,8 +185,8 @@ public class Dragon extends Point {
                 this.alive = false;
                 h.checkMapCleared();
                 m.setMaze(this.x, this.y, ' ');
-            } else if (sleeping == false) {
-                h.setAlive(false);
+            } else if (!sleeping) {
+                h.setDead();
             }
         }
     }
@@ -219,7 +201,7 @@ public class Dragon extends Point {
         int dir = 4;
         boolean canContinue = false;
 
-        while (canContinue == false) {
+        while (!canContinue) {
             dir = r.nextInt(5);
 
             switch (dir) {
@@ -288,7 +270,7 @@ public class Dragon extends Point {
      *
      * @see Dragon#moveOrSleep(MazeBuilder m)
      */
-    public void resetMoveCounter() {
+    private void resetMoveCounter() {
         moveCounter = -1;
     }
 
@@ -297,7 +279,7 @@ public class Dragon extends Point {
      *
      * @see Dragon#moveOrSleep(MazeBuilder m)
      */
-    public void resetFallAsleepCounter() {
+    private void resetFallAsleepCounter() {
         fallAsleepCounter = -1;
     }
 
@@ -306,7 +288,7 @@ public class Dragon extends Point {
      *
      * @see Dragon#moveOrSleep(MazeBuilder m)
      */
-    public void resetSleepCounter() {
+    private void resetSleepCounter() {
         sleepCounter = -1;
     }
 
@@ -315,7 +297,7 @@ public class Dragon extends Point {
      *
      * @see Dragon#moveOrSleep(MazeBuilder m)
      */
-    public void resetWakeUpCounter() {
+    private void resetWakeUpCounter() {
         wakeUpCounter = -1;
     }
 
