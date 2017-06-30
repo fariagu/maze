@@ -107,12 +107,10 @@ public class Hero extends Point {
     }
 
     /**
-     * Altera o valor de alive.
-     *
-     * @param alive Variavel do tipo boolean.
+     * Coloca o Hero no estado morto.
      */
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    void setDead() {
+        this.alive = false;
     }
 
     /**
@@ -127,13 +125,12 @@ public class Hero extends Point {
     }
 
     /**
-     * Altera o valor de mapCleared.
+     * Altera o valor de mapCleared para true.
      *
-     * @param mapCleared Variavel do tipo boolean.
      * @see Hero#checkMapCleared()
      */
-    public void setMapCleared(boolean mapCleared) {
-        this.mapCleared = mapCleared;
+    public void setMapCleared() {
+        this.mapCleared = true;
     }
 
     /**
@@ -167,28 +164,62 @@ public class Hero extends Point {
     }
 
     /**
-     * Imprime no maze o valor do Hero.
-     *
-     * @param m Maze na forma de MazeBuilder.
-     */
-    public void print(MazeBuilder m) {
-        if (this.armed)
-            m.setMaze(this, 'A');
-        else
-            m.setMaze(x, y, 'H');
-    }
-
-    /**
      * Calcula se todos os Dragons foram mortos.
      * Se sim, o jogador esta em condicoes de ganhar o jogo e pode dirigir se para a saida.
      */
-    public void checkMapCleared() {
-        ArrayList<Dragon> d = Dragon.getDragons();
+    void checkMapCleared() {
+        ArrayList<Dragon> dragon_list = Dragon.getDragons();
 
-        for (int i = 0; i < d.size(); i++)
-            if (d.get(i).isAlive())
+        for (Dragon d : dragon_list)
+            if (d.isAlive())
                 return;
         this.mapCleared = true;
+    }
+
+    /**
+     * Verifica se a Sword está nas posições ortogonais ao Hero.
+     * Não é preciso o Hero ir para a posição da espada para a apanhar, basta estar numa posição adjacente.
+     *
+     * @param m Maze atual
+     */
+    private void checkSword(MazeBuilder m) {
+        if (m.getMaze(x - 1, y) == 'E') {//up
+            this.armed = true;
+            m.setMaze(x - 1, y, ' ');
+        } else if (m.getMaze(x + 1, y) == 'E') {//down
+            this.armed = true;
+            m.setMaze(x + 1, y, ' ');
+        } else if (m.getMaze(x, y - 1) == 'E') {//left
+            this.armed = true;
+            m.setMaze(x, y - 1, ' ');
+        } else if (m.getMaze(x, y + 1) == 'E') {//right
+            this.armed = true;
+            m.setMaze(x, y + 1, ' ');
+        }
+    }
+
+    /**
+     * Atualiza o estado do Hero.
+     * Primeiro verifica se é uma posição livre, se for move-se para lá.
+     * Caso não seja, verifica se é a saída e se já reuniu as condições para se deslocar para lá.
+     *
+     * @param m Maze atual
+     * @param ix Incremento em x
+     * @param iy Incremento em y
+     */
+    private void updateHero(MazeBuilder m, int ix, int iy) {
+        if (m.getMaze(x + ix, y + iy) == ' ') {//se a posição está livre
+            m.setMaze(x, y, ' ');
+            x += ix;
+            y += iy;
+            m.printHero(this);
+        } else if (m.getMaze(x + ix, y + iy) == 'S' && this.armed && this.mapCleared) {//ir para a saída
+            m.setMaze(x, y, ' ');
+            x += ix;
+            y += iy;
+            m.printHero(this);
+            this.setFinished(true);
+        }
     }
 
     /**
@@ -197,70 +228,19 @@ public class Hero extends Point {
      * @param m Maze na forma de MazeBuilder
      */
     public void move(MazeBuilder m) {//0=up, 1=down, 2=left, 3=right
+        checkSword(m);
         switch (dir) {
             case 0://up
-                if (m.getMaze(x - 1, y) == 'E') {
-                    this.armed = true;
-                    m.setMaze(x - 1, y, ' ');
-                }
-                if (m.getMaze(x - 1, y) == ' ') {
-                    m.setMaze(x, y, ' ');
-                    x--;
-                    print(m);
-                } else if (m.getMaze(x - 1, y) == 'S' && this.armed && this.mapCleared) {
-                    m.setMaze(x, y, ' ');
-                    x--;
-                    print(m);
-                    this.setFinished(true);
-                }
+                updateHero(m, -1, 0);
                 break;
             case 1://down
-                if (m.getMaze(x + 1, y) == 'E') {
-                    this.armed = true;
-                    m.setMaze(x + 1, y, ' ');
-                }
-                if (m.getMaze(x + 1, y) == ' ') {
-                    m.setMaze(x, y, ' ');
-                    x++;
-                    m.printHero(this);
-                } else if (m.getMaze(x + 1, y) == 'S' && this.armed && this.mapCleared) {
-                    m.setMaze(x, y, ' ');
-                    x++;
-                    m.printHero(this);
-                    this.setFinished(true);
-                }
+                updateHero(m, 1, 0);
                 break;
             case 2://left
-                if (m.getMaze(x, y - 1) == 'E') {
-                    this.armed = true;
-                    m.setMaze(x, y - 1, ' ');
-                }
-                if (m.getMaze(x, y - 1) == ' ') {
-                    m.setMaze(x, y, ' ');
-                    y--;
-                    m.printHero(this);
-                } else if (m.getMaze(x, y - 1) == 'S' && this.armed && this.mapCleared) {
-                    m.setMaze(x, y, ' ');
-                    y--;
-                    m.printHero(this);
-                    this.setFinished(true);
-                }
+                updateHero(m, 0, -1);
                 break;
             case 3://right
-                if (m.getMaze(x, y + 1) == 'E') {
-                    this.armed = true;
-                    m.setMaze(x, y + 1, ' ');
-                }
-                if (m.getMaze(x, y + 1) == ' ') {
-                    m.setMaze(x, y, ' ');
-                    y++;
-                    m.printHero(this);
-                } else if (m.getMaze(x, y + 1) == 'S' && this.armed && this.mapCleared) {
-                    m.setMaze(x, y, ' ');
-                    y++;
-                    m.printHero(this);
-                    this.setFinished(true);
-                }
+                updateHero(m, 0, 1);
                 break;
             default:
                 break;
