@@ -362,9 +362,9 @@ public class Labirinto implements PropertyChangeListener {
                 dNum = 1;
             }
 
-            if (dNum > maze.getBlancSpaces() - 2) {
+            if (dNum > maze.getBlankSpaces() - 2) {
                 JOptionPane.showMessageDialog(frmLabirinto, "There isn't enough space for all those dragons");
-                dNum = maze.getBlancSpaces() - 2;
+                dNum = maze.getBlankSpaces() - 2;
                 nDragons.setValue(dNum);
             }
 
