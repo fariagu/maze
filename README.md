@@ -17,7 +17,7 @@ Controlos são wasd, sendo necessário carregar "enter" para efetuar o movimento
 ### Interface Gráfica ###
 Iniciar o jogo através de src/gui/Labirinto.main
 
-Controlos são as setas na interface.
+Controlos são as setas na interface, ou as setas do teclado.
 * Herói - Azul
 * Dragão - Vermelho
 * Espada - Verde
