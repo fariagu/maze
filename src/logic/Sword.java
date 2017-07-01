@@ -76,7 +76,7 @@ public class Sword extends Point {
      * Serve para saber se a espada ja foi apanhada.
      *
      * @return Variavel do tipo boolean.
-     * @see Sword#heroOverlap(Hero h, MazeBuilder m)
+     * @see #heroOverlap(Hero)
      */
     public boolean isCollected() {
         return collected;
@@ -85,11 +85,10 @@ public class Sword extends Point {
     /**
      * Altera o valor de collected.
      *
-     * @param collected Variavel do tipo boolean.
-     * @see Sword#heroOverlap(Hero h, MazeBuilder m)
+     * @see #heroOverlap(Hero)
      */
-    public void setCollected(boolean collected) {
-        this.collected = collected;
+    private void setCollected() {
+        this.collected = true;
     }
 
     /**
@@ -98,7 +97,7 @@ public class Sword extends Point {
      * @return Variavel do tipo boolean.
      * @see Sword#dragonOverlap(Dragon d, MazeBuilder m)
      */
-    public boolean isOverlapped() {
+    boolean isOverlapped() {
         return overlapped;
     }
 
@@ -115,26 +114,25 @@ public class Sword extends Point {
     /**
      * Calcula se d esta na mesma posicao que a Sword.
      *
-     * @param d Variavel do tipo Dragon.
-     * @param m Maze na forma de MazeBuilder.
+     * @param d Qualquer Dragon
+     * @param m Maze na forma de MazeBuilder
      */
     public void dragonOverlap(Dragon d, MazeBuilder m) {
         if (!this.isCollected()) {
             if (this.x == d.getX() && this.y == d.getY())
-                overlapped = true;
+                setOverlapped(true);
             m.printSword(this);
         }
     }
 
     /**
-     * Calcula se h esta na mesma posicao que a Sword.
+     * Calcula se Hero está na mesma posição que a Sword.
      *
-     * @param h Variavel do tipo Hero.
-     * @param m Maze na forma de MazeBuilder.
+     * @param h Hero
      */
-    public void heroOverlap(Hero h, MazeBuilder m) {
+    public void heroOverlap(Hero h) {
         if (this.x == h.x && this.y == h.y) {
-            this.setCollected(true);
+            this.setCollected();
             h.setArmed(true);
         }
     }

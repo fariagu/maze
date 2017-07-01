@@ -1,6 +1,5 @@
 package logic;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -16,7 +15,6 @@ public class Dragon extends Point {
     private int fallAsleepCounter;
     private int sleepCounter;
     private int wakeUpCounter;
-    private static ArrayList<Dragon> dragons;
 
     /**
      * Constroi um Dragon na posicao (x, y) em m.
@@ -26,19 +24,6 @@ public class Dragon extends Point {
      * @param m Maze na forma de MazeBuilder.
      */
     public Dragon(int x, int y, MazeBuilder m) {
-        dragons = new ArrayList<>();
-
-        this.x = x;
-        this.y = y;
-        alive = true;
-        m.printDragon(this);
-    }
-
-    public Dragon(int x, int y, MazeBuilder m, boolean multiple) {
-        if (!multiple) {
-            dragons = new ArrayList<>();
-        }
-
         this.x = x;
         this.y = y;
         alive = true;
@@ -50,14 +35,9 @@ public class Dragon extends Point {
      * Garante que nao esta perto do heroi.
      * Serve para quando se quer ter mais que um Dragon no maze
      *
-     * @param m        Maze na forma de MazeBuilder.
-     * @param multiple Variavel do tipo boolean.
+     * @param m Maze na forma de MazeBuilder.
      */
-    public Dragon(MazeBuilder m, boolean multiple) {
-        if (!multiple) {
-            dragons = new ArrayList<>();
-        }
-
+    public Dragon(MazeBuilder m) {
         int size = m.getSize();
         int x, y;
         Random r = new Random();
@@ -66,20 +46,15 @@ public class Dragon extends Point {
             x = r.nextInt(size - 1) + 1;
             y = r.nextInt(size - 1) + 1;
 
-            if (m.getMaze(x, y) == ' ') {
-
-                if (m.getMaze(x - 1, y) != 'H') {
-                    if (m.getMaze(x + 1, y) != 'H') {
-                        if (m.getMaze(x, y - 1) != 'H') {
+            if (m.getMaze(x, y) == ' ')
+                if (m.getMaze(x - 1, y) != 'H')
+                    if (m.getMaze(x + 1, y) != 'H')
+                        if (m.getMaze(x, y - 1) != 'H')
                             if (m.getMaze(x, y + 1) != 'H') {
                                 this.x = x;
                                 this.y = y;
                                 break;
                             }
-                        }
-                    }
-                }
-            }
         }
         alive = true;
         m.printDragon(this);
@@ -92,8 +67,6 @@ public class Dragon extends Point {
      * @param m Maze na forma de char[][].
      */
     public Dragon(char[][] m) {
-        dragons = new ArrayList<>();
-
         int size = m.length;
         int x, y;
         Random r = new Random();
@@ -122,25 +95,6 @@ public class Dragon extends Point {
     }
 
     /**
-     * Inicializa a ArrayList para ter mais que um dragao no maze.
-     */
-    public Dragon() {
-        dragons = new ArrayList<>();
-    }
-
-    /**
-     * Construtor de n Dragons em m.
-     *
-     * @param n Variavel do tipo int.
-     * @param m Maze na forma de MazeBuilder.
-     */
-    public void multipleDragons(int n, MazeBuilder m) {
-        for (int i = 0; i < n; i++) {
-            dragons.add(new Dragon(m, true));
-        }
-    }
-
-    /**
      * Retorna o estado alive do Dragon.
      * Usado para confirmar que todos os Dragons estao mortos e o Hero pode acabar o jogo.
      *
@@ -160,15 +114,6 @@ public class Dragon extends Point {
     }
 
     /**
-     * Retorna um ArrayList com todos os Dragons do maze para consulta.
-     *
-     * @return ArrayList com todos os Dragon do maze.
-     */
-    public static ArrayList<Dragon> getDragons() {
-        return dragons;
-    }
-
-    /**
      * Faz a luta entre h e os Dragons.
      * So ha luta se o Dragon estiver perto do Hero.
      *
@@ -176,14 +121,9 @@ public class Dragon extends Point {
      * @param m Maze na forma de MazeBuilder.
      */
     public void fight(Hero h, MazeBuilder m) {
-        if (((this.x == h.x) && (this.y == (h.y + 1))) ||
-                ((this.x == h.x) && (this.y == (h.y - 1))) ||
-                ((this.y == h.y) && (this.x == (h.x + 1))) ||
-                ((this.y == h.y) && (this.x == (h.x - 1))) ||
-                ((this.y == h.y) && (this.x == h.x))) {
+        if ((this.x == h.x && this.y == (h.y + 1)) || (this.x == h.x && this.y == (h.y - 1)) || (this.y == h.y && this.x == (h.x + 1)) || (this.y == h.y && this.x == (h.x - 1)) || (this.y == h.y && this.x == h.x)) {
             if (h.isArmed()) {
                 this.alive = false;
-                h.checkMapCleared();
                 m.setMaze(this.x, this.y, ' ');
             } else if (!sleeping) {
                 h.setDead();

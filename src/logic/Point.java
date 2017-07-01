@@ -7,8 +7,8 @@ package logic;
  * @author Gustavo Faria
  */
 public class Point {
-    protected int x;
-    protected int y;
+    int x;
+    int y;
 
     /**
      * Construtor de uma coordenada na forma de (x, y).
@@ -24,7 +24,7 @@ public class Point {
     /**
      * Construtor generico de um Point.
      */
-    public Point() {
+    Point() {
         this.x = 1;
         this.y = 1;
     }

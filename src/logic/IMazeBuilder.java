@@ -7,5 +7,5 @@ package logic;
  * @author Gustavo Faria
  */
 public interface IMazeBuilder {
-    public char[][] buildMaze(int size) throws IllegalArgumentException;
+    char[][] buildMaze(int size) throws IllegalArgumentException;
 }

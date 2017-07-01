@@ -5,20 +5,13 @@ import logic.Hero;
 import logic.MazeBuilder;
 import logic.Sword;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
-    private static boolean finished = false;
+    private static MazeBuilder maze;
 
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public static void setFinished(boolean finished) {
-        Game.finished = finished;
-    }
-
-    public static int dirToInt(String dir) {
+    private static int dirToInt(String dir) {
         switch (dir) {
             case "w":
                 return 0;
@@ -33,7 +26,16 @@ public class Game {
         }
     }
 
-    public static int gamemode() {
+    /**
+     * Sets the game mode.
+     * <blockquote>The game modes are:</blockquote>
+     * <p>1 - Dragon doesn't move</p>
+     * <p>2 - Dragon moves randomly</p>
+     * 3 - Dragon move and sleeps randomly
+     *
+     * @return int representing the game mode
+     */
+    private static int gamemode() {
         Scanner input = new Scanner(System.in);
         boolean gameSet = false;
         String gameMode;
@@ -46,78 +48,84 @@ public class Game {
 
         while (!gameSet) {
             gameMode = input.nextLine();
-
-            if (gameMode.equals("1")) {
-                mode = 1;
-                gameSet = true;
-            } else if (gameMode.equals("2")) {
-                mode = 2;
-                gameSet = true;
-            } else if (gameMode.equals("3")) {
-                mode = 3;
-                gameSet = true;
-            } else {
-                System.out.println("Try again. Press 1, 2 or 3 and then Enter.");
+            switch (gameMode) {
+                case "1":
+                    mode = 1;
+                    gameSet = true;
+                    break;
+                case "2":
+                    mode = 2;
+                    gameSet = true;
+                    break;
+                case "3":
+                    mode = 3;
+                    gameSet = true;
+                    break;
+                default:
+                    System.out.println("Try again. Press 1, 2 or 3 and then Enter.");
+                    break;
             }
         }
-        System.out.println("...");
+        System.out.println();
         return mode;
     }
 
-    public static void main(String args[]) {
-        int mode = 0;
-        mode = gamemode();
-
-        Scanner input = new Scanner(System.in);
-        MazeBuilder maze = new MazeBuilder(13);//must be an odd number TODO exception handling
-        Hero h = new Hero(maze);
-        Dragon d = new Dragon();
-        d.multipleDragons(3, maze);
-        Sword s = new Sword(maze);
-        String dir;
-
-        while (finished == false) {
+    private static void endGame(Hero h) {
+        if (!h.isAlive()) {
             maze.printMaze();
-            dir = input.nextLine();
+            System.out.println("Game Over");
+        }
+
+        if (h.isFinished()) {
+            maze.printMaze();
+            System.out.println("Success!");
+        }
+    }
+
+    public static void main(String args[]) {
+        int mode = gamemode();
+        Scanner input = new Scanner(System.in);
+        maze = new MazeBuilder(13);//must be an odd number TODO exception handling
+        Hero h = new Hero(maze);
+        ArrayList<Dragon> dragon_list = new ArrayList<>();
+        dragon_list.add(new Dragon(maze));
+        dragon_list.add(new Dragon(maze));
+        dragon_list.add(new Dragon(maze));
+        Sword s = new Sword(maze);
+
+        while (!h.isFinished() && h.isAlive()) {
+            maze.printMaze();
+            String dir = input.nextLine();
+            if (dir.equals("q"))
+                break;
             h.setDir(dirToInt(dir));
             h.move(maze);
 
-            if (!s.isCollected()) {
-                s.heroOverlap(h, maze);
-            }
+            if (!s.isCollected())
+                s.heroOverlap(h);
 
             s.setOverlapped(false);
-            for (int i = 0; i < d.getDragons().size(); i++) {
-                if (d.getDragons().get(i).isAlive()) {
-                    d.getDragons().get(i).fight(h, maze);
-
+            boolean areDragonsAlive = false;
+            for (Dragon dragon : dragon_list)
+                if (dragon.isAlive()) {
+                    areDragonsAlive = true;
+                    dragon.fight(h, maze);
                     if (mode == 2 || mode == 3) {
-                        if (mode == 2) {
-                            d.getDragons().get(i).move(maze);
-                        }
-                        if (mode == 3) {
-                            d.getDragons().get(i).moveOrSleep(maze);
-                        }
-                        s.dragonOverlap(d.getDragons().get(i), maze);
-                        d.getDragons().get(i).fight(h, maze);
+                        if (mode == 2)
+                            dragon.move(maze);
+                        if (mode == 3)
+                            dragon.moveOrSleep(maze);
+                        s.dragonOverlap(dragon, maze);
+                        dragon.fight(h, maze);
                     }
                 }
-            }
 
-            if (dir.equals("q")) {
-                break;
-            }
-            if (!h.isAlive()) {
-                maze.printMaze();
-                System.out.println("Game Over");
-                break;
-            }
-            if (h.isFinished()) {
-                maze.printMaze();
-                System.out.println("Success!");
-                break;
-            }
+            if(!areDragonsAlive)
+                h.setMapCleared();
         }
+
+        endGame(h);
+
         input.close();
     }
 }

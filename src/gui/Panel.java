@@ -1,7 +1,5 @@
 package gui;
 
-import logic.MazeBuilder;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +11,6 @@ public class Panel extends JPanel {
     private int x = 0, y = 0;
     private BufferedImage s_hero, ns_hero, dragon, s_dragon, sword, dsword, wall, exit, empty;
     private char[][] maze;
-    private int dir;
-    private Labirinto l;
-
-    public int getDir() {
-        return dir;
-    }
-
-    public void setDir(int dir) {
-        this.dir = dir;
-    }
 
     public char[][] getMaze() {
         return maze;
@@ -32,12 +20,7 @@ public class Panel extends JPanel {
         this.maze = maze;
     }
 
-    public void initMaze(MazeBuilder m) {
-        this.maze = new char[m.getSize()][m.getSize()];
-        this.maze = m.getFullMaze();
-    }
-
-    public Panel(/*MazeBuilder m*/) {
+    Panel() {
         try {
             s_hero = ImageIO.read(new File("res/s_hero.jpg"));
             ns_hero = ImageIO.read(new File("res/ns_hero.jpg"));
@@ -51,17 +34,15 @@ public class Panel extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //maze = new char[m.getSize()][m.getSize()];
     }
 
     public void paintComponent(Graphics g) {
         int size = 400 / maze.length;
         super.paintComponent(g);
 
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[i].length; j++) {
-
-                switch (maze[i][j]) {
+        for (char[] maze_row : maze) {
+            for (char maze_col : maze_row) {
+                switch (maze_col) {
                     case 'X':
                         g.drawImage(wall, x, y, size, size, null);
                         break;
@@ -99,7 +80,5 @@ public class Panel extends JPanel {
         }
         x = 0;
         y = 0;
-        //g.drawImage(square, x, y, length, length, 0, 0, square.getWidth(), square.getHeight(), null);
-        //g.fillRect(x, y, length, length);
     }
 }

@@ -1,6 +1,5 @@
 package logic;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -118,7 +117,6 @@ public class Hero extends Point {
      * Serve para saber se o Hero ja matou todos os Dragons.
      *
      * @return Variavel do tipo boolean.
-     * @see Hero#checkMapCleared()
      */
     public boolean isMapCleared() {
         return mapCleared;
@@ -126,8 +124,6 @@ public class Hero extends Point {
 
     /**
      * Altera o valor de mapCleared para true.
-     *
-     * @see Hero#checkMapCleared()
      */
     public void setMapCleared() {
         this.mapCleared = true;
@@ -164,19 +160,6 @@ public class Hero extends Point {
     }
 
     /**
-     * Calcula se todos os Dragons foram mortos.
-     * Se sim, o jogador esta em condicoes de ganhar o jogo e pode dirigir se para a saida.
-     */
-    void checkMapCleared() {
-        ArrayList<Dragon> dragon_list = Dragon.getDragons();
-
-        for (Dragon d : dragon_list)
-            if (d.isAlive())
-                return;
-        this.mapCleared = true;
-    }
-
-    /**
      * Verifica se a Sword está nas posições ortogonais ao Hero.
      * Não é preciso o Hero ir para a posição da espada para a apanhar, basta estar numa posição adjacente.
      *
@@ -203,7 +186,7 @@ public class Hero extends Point {
      * Primeiro verifica se é uma posição livre, se for move-se para lá.
      * Caso não seja, verifica se é a saída e se já reuniu as condições para se deslocar para lá.
      *
-     * @param m Maze atual
+     * @param m  Maze atual
      * @param ix Incremento em x
      * @param iy Incremento em y
      */

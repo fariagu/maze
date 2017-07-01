@@ -13,16 +13,16 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 public class Labirinto implements PropertyChangeListener {
-
-    private JFrame frmLabirinto;
+    private JFrame labirintoFrame;
     private JComboBox<String> comboBox;
     private JPanel gamePanel;
     private JLabel status;
     private MazeBuilder maze;
     private Hero h;
-    private Dragon d;
+    private static ArrayList<Dragon> dragons_list;
     private Sword s;
     private int mode;
 
@@ -34,12 +34,12 @@ public class Labirinto implements PropertyChangeListener {
     private JFormattedTextField dimension;
     private JFormattedTextField nDragons;
     private NumberFormat nFormat = NumberFormat.getNumberInstance();
-    private int nDim = 11;
+    private int mazeSize = 11;
     private int nDra = 1;
 
 
-    JFrame getFrmLabirinto() {
-        return frmLabirinto;
+    JFrame getLabirintoFrame() {
+        return labirintoFrame;
     }
 
     JPanel getGamePanel() {
@@ -62,8 +62,8 @@ public class Labirinto implements PropertyChangeListener {
         this.h = h;
     }
 
-    public void setD(Dragon d) {
-        this.d = d;
+    void setD(Dragon d) {
+        dragons_list.add(d);
     }
 
     void setS(Sword s) {
@@ -90,22 +90,27 @@ public class Labirinto implements PropertyChangeListener {
         h.setDir(direcao);
         h.move(maze);
         if (!s.isCollected())
-            s.heroOverlap(h, maze);
+            s.heroOverlap(h);
 
         s.setOverlapped(false);
-        for (int i = 0; i < Dragon.getDragons().size(); i++)
-            if (Dragon.getDragons().get(i).isAlive()) {
-                Dragon.getDragons().get(i).fight(h, maze);
+        boolean areDragonsAlive = false;
+        for (Dragon dragon : dragons_list)
+            if (dragon.isAlive()) {
+                areDragonsAlive = true;
+                dragon.fight(h, maze);
                 if (mode == 2 || mode == 3) {
                     if (mode == 2)
-                        Dragon.getDragons().get(i).move(maze);
+                        dragon.move(maze);
                     else if (mode == 3)
-                        Dragon.getDragons().get(i).moveOrSleep(maze);
+                        dragon.moveOrSleep(maze);
 
-                    Dragon.getDragons().get(i).fight(h, maze);
-                    s.dragonOverlap(Dragon.getDragons().get(i), maze);
+                    dragon.fight(h, maze);
+                    s.dragonOverlap(dragon, maze);
                 }
             }
+
+        if (!areDragonsAlive)
+            h.setMapCleared();
 
         if (!h.isAlive()) {
             System.out.println("Game Over");
@@ -127,7 +132,7 @@ public class Labirinto implements PropertyChangeListener {
         EventQueue.invokeLater(() -> {
             try {
                 Labirinto window = new Labirinto();
-                window.frmLabirinto.setVisible(true);
+                window.labirintoFrame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,7 +141,6 @@ public class Labirinto implements PropertyChangeListener {
 
     void convGameMode(String s) {
         // s = (String) comboBox.getSelectedItem();
-
         switch (s) {
             case "Useless":
                 mode = 1;
@@ -157,6 +161,7 @@ public class Labirinto implements PropertyChangeListener {
      */
     public Labirinto() {
         //addKeyListener(this);
+        dragons_list = new ArrayList<>();
         initialize();
     }
 
@@ -219,23 +224,23 @@ public class Labirinto implements PropertyChangeListener {
      * Initialize the contents of the frame.
      */
     private void initialize() {
-        frmLabirinto = new JFrame();
-        frmLabirinto.setType(Type.UTILITY);
-        frmLabirinto.setTitle("Maze");
-        frmLabirinto.setBounds(100, 100, 650, 450);
-        frmLabirinto.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frmLabirinto.getContentPane().setLayout(null);
+        labirintoFrame = new JFrame();
+        labirintoFrame.setType(Type.UTILITY);
+        labirintoFrame.setTitle("Maze");
+        labirintoFrame.setBounds(100, 100, 650, 450);
+        labirintoFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        labirintoFrame.getContentPane().setLayout(null);
 
         status = new JLabel("Gerar labirinto");//diz o estado atual do jogo
         status.setBounds(10, 360, 186, 20);
-        frmLabirinto.getContentPane().add(status);
+        labirintoFrame.getContentPane().add(status);
 
 		/*
         final JTextArea textArea = new JTextArea();//onde se desenha o labirinto
         textArea.setEditable(false);
 		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
 		textArea.setBounds(238, 36, 186, 214);
-		frmLabirinto.getContentPane().add(textArea);
+		labirintoFrame.getContentPane().add(textArea);
 		*/
 
         final JButton ExitButton = new JButton("Exit");//sair do programa, alternativa ao X da janela
@@ -244,12 +249,12 @@ public class Labirinto implements PropertyChangeListener {
             System.exit(0);
         });
         ExitButton.setBounds(109, 227, 89, 23);
-        frmLabirinto.getContentPane().add(ExitButton);
+        labirintoFrame.getContentPane().add(ExitButton);
 
         final JButton createMaze = new JButton("Create Maze");
         createMaze.addActionListener(e -> new MazeCreator(Labirinto.this));
         createMaze.setBounds(10, 300, 150, 23);
-        frmLabirinto.getContentPane().add(createMaze);
+        labirintoFrame.getContentPane().add(createMaze);
 
         leftButton = new JButton("<");
         downButton = new JButton("v");
@@ -260,25 +265,25 @@ public class Labirinto implements PropertyChangeListener {
         leftButton.addActionListener(e -> moveLeft());
         leftButton.setEnabled(false);
         leftButton.setBounds(10, 174, 60, 23);
-        frmLabirinto.getContentPane().add(leftButton);
+        labirintoFrame.getContentPane().add(leftButton);
 
         //botao para a direita
         rightButton.addActionListener(e -> moveRight());
         rightButton.setEnabled(false);
         rightButton.setBounds(151, 174, 60, 23);
-        frmLabirinto.getContentPane().add(rightButton);
+        labirintoFrame.getContentPane().add(rightButton);
 
         //botao para cima
         upButton.addActionListener(e -> moveUp());
         upButton.setEnabled(false);
         upButton.setBounds(81, 140, 60, 23);
-        frmLabirinto.getContentPane().add(upButton);
+        labirintoFrame.getContentPane().add(upButton);
 
         //botao para baixo
         downButton.addActionListener(e -> moveDown());
         downButton.setEnabled(false);
         downButton.setBounds(81, 174, 60, 23);
-        frmLabirinto.getContentPane().add(downButton);
+        labirintoFrame.getContentPane().add(downButton);
 
 
         comboBox = new JComboBox<>();//modo de jogo
@@ -286,30 +291,27 @@ public class Labirinto implements PropertyChangeListener {
         DefaultComboBoxModel<String> dragons_species_box = new DefaultComboBoxModel<>(dragon_species);
         comboBox.setModel(dragons_species_box);
         comboBox.setBounds(129, 86, 99, 20);
-        frmLabirinto.getContentPane().add(comboBox);
+        labirintoFrame.getContentPane().add(comboBox);
 
         JLabel lblNewLabel_1 = new JLabel("Dificulty");
         lblNewLabel_1.setBounds(10, 89, 109, 14);
-        frmLabirinto.getContentPane().add(lblNewLabel_1);
+        labirintoFrame.getContentPane().add(lblNewLabel_1);
 
         JLabel lblNewLabel_2 = new JLabel("No. of Dragons");
         lblNewLabel_2.setBounds(10, 64, 109, 14);
-        frmLabirinto.getContentPane().add(lblNewLabel_2);
+        labirintoFrame.getContentPane().add(lblNewLabel_2);
 
         JLabel lblNewLabel_3 = new JLabel("Maze Size");
         lblNewLabel_3.setBounds(10, 39, 113, 14);
-        frmLabirinto.getContentPane().add(lblNewLabel_3);
+        labirintoFrame.getContentPane().add(lblNewLabel_3);
 
-        //dimension = new JTextField();//dimension velha //dimensao do labirinto NxN
-        //dimension.setText("11");
-        //nova dimension usando JFormattedTextField para nao aceitar letras
         dimension = new JFormattedTextField(nFormat);
-        dimension.setValue(nDim);//valor default
-        dimension.addPropertyChangeListener("value", this);//muda o valor de nDim no momento em que se escreve
+        dimension.setValue(mazeSize);
+        dimension.addPropertyChangeListener("value", this);
         dimension.setHorizontalAlignment(SwingConstants.RIGHT);
         dimension.setColumns(10);
         dimension.setBounds(129, 36, 99, 20);
-        frmLabirinto.getContentPane().add(dimension);
+        labirintoFrame.getContentPane().add(dimension);
 
         //nDragons = new JTextField();//nDragons velho //numero de dragoes presentes no labirinto
         //nDragons.setText("1");
@@ -319,78 +321,73 @@ public class Labirinto implements PropertyChangeListener {
         nDragons.setHorizontalAlignment(SwingConstants.RIGHT);
         nDragons.setColumns(10);
         nDragons.setBounds(129, 61, 99, 20);
-        frmLabirinto.getContentPane().add(nDragons);
+        labirintoFrame.getContentPane().add(nDragons);
 
         JButton StartButton = new JButton("Start");
         StartButton.addActionListener(arg0 -> {
-            //criar o maze
             try {
-                int mSize = nDim;
+                int mSize = mazeSize;
 
                 if (mSize > 49) {
-                    JOptionPane.showMessageDialog(frmLabirinto, "Maximum size is 49");
+                    JOptionPane.showMessageDialog(labirintoFrame, "Maximum size is 49");
                     dimension.setValue(49);
                     mSize = 49;
                 } else if (mSize < 5) {
-                    JOptionPane.showMessageDialog(frmLabirinto, "Minimum size is 5");
+                    JOptionPane.showMessageDialog(labirintoFrame, "Minimum size is 5");
                     dimension.setValue(5);
                     mSize = 5;
                 }
 
                 if (mSize % 2 == 0) {
                     mSize++;
-                    JOptionPane.showMessageDialog(frmLabirinto, "Must be an odd number.\n Size will be " + mSize);
+                    JOptionPane.showMessageDialog(labirintoFrame, "Must be an odd number.\n Size will be " + mSize);
                     dimension.setValue(mSize);
                 }
 
                 maze = new MazeBuilder(mSize);
             } catch (NumberFormatException e1) {
-                JOptionPane.showMessageDialog(frmLabirinto, "Input must be a number");
+                JOptionPane.showMessageDialog(labirintoFrame, "Input must be a number");
                 e1.printStackTrace();
             }
 
             h = new Hero(maze);
             s = new Sword(maze);
-            d = new Dragon();
 
             String[] parts = nDragons.getText().split("\\.");
             int dNum = Integer.parseInt(parts[0]);
 
             if (dNum < 1) {
-                JOptionPane.showMessageDialog(frmLabirinto, "There must be at least one dragon");
+                JOptionPane.showMessageDialog(labirintoFrame, "There must be at least one dragon");
                 nDragons.setValue(1);
                 dNum = 1;
             }
 
             if (dNum > maze.getBlankSpaces() - 2) {
-                JOptionPane.showMessageDialog(frmLabirinto, "There isn't enough space for all those dragons");
+                JOptionPane.showMessageDialog(labirintoFrame, "There isn't enough space for all those dragons");
                 dNum = maze.getBlankSpaces() - 2;
                 nDragons.setValue(dNum);
             }
 
-            d.multipleDragons(dNum, maze);
+            for (int i = 0; i < dNum; i++)
+                dragons_list.add(new Dragon(maze));
 
             gamePanel = new Panel();
             gamePanel.setBounds(238, 10, 400, 400);
             gamePanel.setVisible(true);
             gamePanel.setFocusable(true);
             gamePanel.addKeyListener(new KeyListener() {
-
                 @Override
                 public void keyPressed(KeyEvent e) {
                     switch (e.getKeyCode()) {
                         case KeyEvent.VK_LEFT:
                             moveLeft();
                             break;
-
                         case KeyEvent.VK_RIGHT:
                             moveRight();
                             break;
-
                         case KeyEvent.VK_UP:
                             moveUp();
                             break;
-
                         case KeyEvent.VK_DOWN:
                             moveDown();
                             break;
@@ -407,9 +404,8 @@ public class Labirinto implements PropertyChangeListener {
                 @Override
                 public void keyTyped(KeyEvent e) {
                 }
-
             });
-            frmLabirinto.getContentPane().add(gamePanel);
+            labirintoFrame.getContentPane().add(gamePanel);
             gamePanel.requestFocus();
 
             convGameMode((String) comboBox.getSelectedItem());
@@ -426,16 +422,15 @@ public class Labirinto implements PropertyChangeListener {
             gamePanel.repaint();
         });
         StartButton.setBounds(10, 227, 89, 23);
-        frmLabirinto.getContentPane().add(StartButton);
+        labirintoFrame.getContentPane().add(StartButton);
     }
 
     public void propertyChange(PropertyChangeEvent e) {//ativado quando muda o texto
         Object source = e.getSource();
         //getvalue retorna Object, preciso altera lo
         if (source == dimension)
-            nDim = ((Number) dimension.getValue()).intValue();
+            mazeSize = ((Number) dimension.getValue()).intValue();
         else if (source == nDragons)
             nDra = ((Number) nDragons.getValue()).intValue();
     }
-
 }

@@ -53,9 +53,11 @@ public class MazeBuilder implements IMazeBuilder {
 
     /**
      * Construtor do maze com o rato de dimensao s.
+     * Serve para o utilizador construir o tabuleiro com o rato.
+     * TODO Arranjar melhor solução para detetar que se quer um tabuleiro vazio
      *
-     * @param s Variavel do tipo int.
-     * @param i Variavel para escolher o rato.
+     * @param s Variavel do tipo int
+     * @param i Variavel para escolher o rato
      */
     public MazeBuilder(int s, int i) {
         this.size = s;
@@ -95,11 +97,12 @@ public class MazeBuilder implements IMazeBuilder {
 
     /**
      * Altera o valor na posicao p do maze para o valor de val.
+     * TODO Alterar os setMaze para esta função com Point
      *
      * @param p   Variavel do tipo Point que representa a posicao no maze.
      * @param val Variavel do tipo char que sera o novo valor da posicao p do maze.
      */
-    public void setMaze(Point p, char val) {
+    void setMaze(Point p, char val) {
         maze[p.x][p.y] = val;
     }
 
@@ -113,40 +116,32 @@ public class MazeBuilder implements IMazeBuilder {
     }
 
     /**
-     * Altera a dimensao do maze.
-     *
-     * @param size Variavel do tipo int.
-     */
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    /**
      * Escreve na consola o estado atual do maze.
      */
     public void printMaze() {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[i].length; j++) {
-                System.out.print(maze[i][j] + " ");
-            }
+        for (char[] maze_row : maze) {
+            for (char maze_col : maze_row)
+                System.out.print(maze_col + " ");
             System.out.println();
         }
+        System.out.println();
     }
 
     /**
      * Escreve o estado atual do maze para uma string.
+     * TODO guardar o tabuleiro para voltar a jogar no futuro
      *
      * @return Uma variavel do tipo String.
      */
     public String printMaze2String() {
-        String string = "";
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[i].length; j++) {
-                string += (maze[i][j] + " ");
+        StringBuilder string = new StringBuilder();
+        for (char[] maze_row : maze) {
+            for (char maze_col : maze_row) {
+                string.append(maze_col).append(" ");
             }
-            string += "\n";
+            string.append("\n");
         }
-        return string;
+        return string.toString();
     }
 
     /**
@@ -154,7 +149,7 @@ public class MazeBuilder implements IMazeBuilder {
      *
      * @param h Variavel do tipo Hero.
      */
-    public void printHero(Hero h) {
+    void printHero(Hero h) {
         if (h.isArmed()) {
             this.setMaze(h.x, h.y, 'A');
         } else {
@@ -168,7 +163,7 @@ public class MazeBuilder implements IMazeBuilder {
      *
      * @param d Variavel do tipo Dragon.
      */
-    public void printDragon(Dragon d) {
+    void printDragon(Dragon d) {
         if (d.isSleeping()) {
             this.setMaze(d.x, d.y, 'd');
         } else {
@@ -183,7 +178,7 @@ public class MazeBuilder implements IMazeBuilder {
      *
      * @param s Variavel do tipo Sword.
      */
-    public void printSword(Sword s) {
+    void printSword(Sword s) {
         if (!s.isCollected())
             if (s.isOverlapped())
                 this.setMaze(s.getX(), s.getY(), 'F');
@@ -194,14 +189,14 @@ public class MazeBuilder implements IMazeBuilder {
     /**
      * Verifica quais as posicoes do maze que ja foram visitadas.
      *
-     * @param m Maze do tipo char[][].
+     * @param maze Maze do tipo char[][].
      * @return Variavel do tipo boolean.
      * @see MazeBuilder#randomMaze()
      */
-    public boolean check(char[][] m) {
-        for (int i = 0; i < m.length; i++)
-            for (int j = 0; j < m.length; j++) {
-                if (m[i][j] != '+')
+    private boolean check(char[][] maze) {
+        for (char[] maze_row : maze)
+            for (int j = 0; j < maze.length; j++) {
+                if (maze_row[j] != '+')
                     return false;
             }
         return true;
@@ -212,7 +207,7 @@ public class MazeBuilder implements IMazeBuilder {
      *
      * @return Variavel do tipo int.
      */
-    public int getBlancSpaces() {
+    public int getBlankSpaces() {
         int res = 0;
         for (int i = 1; i < maze.length - 1; i++) {
             for (int j = 1; j < maze[i].length - 1; j++) {
@@ -229,7 +224,7 @@ public class MazeBuilder implements IMazeBuilder {
      *
      * @return Maze na forma de char[][].
      */
-    public char[][] emptyMaze() {
+    private char[][] emptyMaze() {
         char[][] m = new char[size][size];
 
         for (int i = 0; i < size; i++)
@@ -246,7 +241,7 @@ public class MazeBuilder implements IMazeBuilder {
      *
      * @return Maze do tipo char[][].
      */
-    public char[][] randomMaze() {
+    private char[][] randomMaze() {
         char[][] tmp = new char[size][size];
         int vcsize = (size - 1) / 2;
         char[][] visitedCells = new char[vcsize][vcsize];
@@ -257,7 +252,7 @@ public class MazeBuilder implements IMazeBuilder {
         int mazeY = 1;
         int xExit = 0;
         int yExit = 0;
-        Stack<Integer> stackMov = new Stack<Integer>();
+        Stack<Integer> stackMov = new Stack<>();
 
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
@@ -381,29 +376,25 @@ public class MazeBuilder implements IMazeBuilder {
                     switch (0) {
                         case 0://up
                             if (vcy >= 1)
-                                if (visitedCells[vcy - 1][vcx] == '+') {
-                                } else {
+                                if (visitedCells[vcy - 1][vcx] != '+') {
                                     nextTo = true;
                                     break;
                                 }
                         case 1://down
                             if (vcy < (vcsize - 1))
-                                if (visitedCells[vcy + 1][vcx] == '+') {
-                                } else {
+                                if (visitedCells[vcy + 1][vcx] != '+') {
                                     nextTo = true;
                                     break;
                                 }
                         case 2://left
                             if (vcx >= 1)
-                                if (visitedCells[vcy][vcx - 1] == '+') {
-                                } else {
+                                if (visitedCells[vcy][vcx - 1] != '+') {
                                     nextTo = true;
                                     break;
                                 }
                         case 3://right
                             if (vcx < (vcsize - 1))
-                                if (visitedCells[vcy][vcx + 1] == '+') {
-                                } else {
+                                if (visitedCells[vcy][vcx + 1] != '+') {
                                     nextTo = true;
                                     break;
                                 }

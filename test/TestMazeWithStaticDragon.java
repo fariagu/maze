@@ -4,19 +4,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestMazeWithStaticDragon {
-
-    //	public boolean assertEquals(Point p1, Point p2) {
-    //		return ((p1.x==p2.x) && (p1.y==p2.y));
-    //	}
-    //
-    //	public boolean assertEquals(Boolean boo1, Boolean boo2) {
-    //		return (boo1.equals(boo2));
-    //	}
-    //
-    //	public boolean assertEquals(Object obj1, Object obj2) {
-    //		return (obj1 == obj2);
-    //	}
-
     char[][] m1 = {
             {'X', 'X', 'X', 'X', 'X'},
             {'X', ' ', ' ', ' ', 'S'},
@@ -116,14 +103,14 @@ public class TestMazeWithStaticDragon {
         //picks up top sword
         h.setDir(0);//up
         h.move(maze);
-        s1.heroOverlap(h, maze);
+        s1.heroOverlap(h);
         assertEquals(true, s1.isCollected());
 
         //picks up bottom sword
         h.setDir(1);//down
         h.move(maze);
         h.move(maze);
-        s1.heroOverlap(h, maze);
+        s1.heroOverlap(h);
         assertEquals(true, s1.isCollected());
 
         //picks up left sword
@@ -131,14 +118,14 @@ public class TestMazeWithStaticDragon {
         h.move(maze);
         h.setDir(2);
         h.move(maze);
-        s1.heroOverlap(h, maze);
+        s1.heroOverlap(h);
         assertEquals(true, s1.isCollected());
 
         //picks up right sword
         h.setDir(3);//right
         h.move(maze);
         h.move(maze);
-        s1.heroOverlap(h, maze);
+        s1.heroOverlap(h);
         assertEquals(true, s1.isCollected());
     }
 
@@ -254,7 +241,7 @@ public class TestMazeWithStaticDragon {
 
         //armed = false && mapCleared = true
         h.setArmed(false);
-        h.setMapCleared(true);
+        h.setMapCleared();
 
         h.setDir(0);
         h.move(maze);
@@ -316,7 +303,7 @@ public class TestMazeWithStaticDragon {
         //System.out.print(h.isArmed());
         //System.out.print(maze.getMaze(1,2));
         assertEquals(true, h.isArmed());
-        s.heroOverlap(h, maze);
+        s.heroOverlap(h);
         assertEquals(true, s.isCollected());
         h.setDir(0);//up
         h.move(maze);

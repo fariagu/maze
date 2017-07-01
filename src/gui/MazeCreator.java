@@ -7,14 +7,15 @@ import logic.Sword;
 
 import javax.swing.*;
 import java.awt.Window.Type;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 
 public class MazeCreator implements PropertyChangeListener {
-
     private JFrame editorFrame;
 
     private JRadioButton empty;
@@ -26,8 +27,8 @@ public class MazeCreator implements PropertyChangeListener {
     private JButton done;
     private JButton cancel;
     private JButton start;
-    private JFormattedTextField sizeField;
-    private JComboBox gameMode;
+    private JFormattedTextField dimension;
+    private JComboBox<String> gameMode;
     private JLabel label;
     private JLabel modeLabel;
     private JPanel gamePanel;
@@ -39,15 +40,11 @@ public class MazeCreator implements PropertyChangeListener {
     private boolean hasExit = false;
     private boolean hasSword = false;
 
-    private NumberFormat nFormat = NumberFormat.getNumberInstance();
-
-    public void initElements(Labirinto l) {
-        Dragon d = new Dragon();
-        ArrayList<Dragon> dragons = new ArrayList<Dragon>();
+    private void initElements(Labirinto l) {
         for (int i = 1; i < maze.getSize() - 1; i++) {
             for (int j = 1; j < maze.getSize() - 1; j++) {
                 if (maze.getMaze(i, j) == 'D') {
-                    d.getDragons().add(new Dragon(i, j, maze, true));
+                    l.setD(new Dragon(i, j, maze));
                 } else if (maze.getMaze(i, j) == 'H') {
                     l.setH(new Hero(i, j, maze));
                 } else if (maze.getMaze(i, j) == 'E') {
@@ -55,10 +52,9 @@ public class MazeCreator implements PropertyChangeListener {
                 }
             }
         }
-        l.setD(d);
     }
 
-    public MazeCreator(final Labirinto l) {
+    MazeCreator(final Labirinto l) {
         editorFrame = new JFrame();
         editorFrame.setType(Type.UTILITY);
         editorFrame.setTitle("Create Maze");
@@ -71,324 +67,304 @@ public class MazeCreator implements PropertyChangeListener {
         label.setBounds(20, 20, 200, 20);
         editorFrame.getContentPane().add(label);
 
-        sizeField = new JFormattedTextField(nFormat);
-        sizeField.setValue(new Integer(mazeSize));
-        sizeField.addPropertyChangeListener("value", this);
-        sizeField.setHorizontalAlignment(SwingConstants.RIGHT);
-        sizeField.setColumns(10);
-        sizeField.setBounds(140, 20, 100, 20);
-        editorFrame.getContentPane().add(sizeField);
+        NumberFormat nFormat = NumberFormat.getNumberInstance();
+        dimension = new JFormattedTextField(nFormat);
+        dimension.setValue(mazeSize);
+        dimension.addPropertyChangeListener("value", this);
+        dimension.setHorizontalAlignment(SwingConstants.RIGHT);
+        dimension.setColumns(10);
+        dimension.setBounds(140, 20, 100, 20);
+        editorFrame.getContentPane().add(dimension);
 
         modeLabel = new JLabel("Game Mode:");
         modeLabel.setBounds(20, 50, 200, 20);
         editorFrame.getContentPane().add(modeLabel);
 
-        gameMode = new JComboBox();
-        gameMode.setModel(new DefaultComboBoxModel(new String[]{"Useless", "Sleepy", "Beast Mode"}));
+        gameMode = new JComboBox<>();
+        String[] dragon_species = new String[]{"Useless", "Sleepy", "Beast Mode"};
+        DefaultComboBoxModel<String> dragons_species_box = new DefaultComboBoxModel<>(dragon_species);
+        gameMode.setModel(dragons_species_box);
         gameMode.setBounds(140, 50, 100, 20);
         editorFrame.getContentPane().add(gameMode);
 
         cancel = new JButton("Cancel");
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                editorFrame.dispose();
-            }
-        });
+        cancel.addActionListener(e -> editorFrame.dispose());
         cancel.setBounds(110, 227, 89, 23);
         editorFrame.getContentPane().add(cancel);
 
         start = new JButton("Start");
-        start.addActionListener(new ActionListener() {
+        start.addActionListener(arg0 -> {
+            try {
+                int mSize = mazeSize;
 
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                try {
-                    maze = new MazeBuilder(mazeSize, 0);
+                if (mSize > 49) {
+                    JOptionPane.showMessageDialog(editorFrame, "Maximum size is 49");
+                    dimension.setValue(49);
+                    mSize = 49;
+                } else if (mSize < 5) {
+                    JOptionPane.showMessageDialog(editorFrame, "Minimum size is 5");
+                    dimension.setValue(5);
+                    mSize = 5;
+                }
 
-                    start.setEnabled(false);
-                    start.setVisible(false);
-                    gameMode.setEnabled(false);
-                    gameMode.setVisible(false);
-                    modeLabel.setEnabled(false);
-                    modeLabel.setVisible(false);
+                if (mSize % 2 == 0) {
+                    mSize++;
+                    JOptionPane.showMessageDialog(editorFrame, "Must be an odd number.\n Size will be " + mSize);
+                    dimension.setValue(mSize);
+                }
+                maze = new MazeBuilder(mazeSize, 0);
 
-                    editorFrame.getContentPane().remove(sizeField);
-                    editorFrame.repaint();
+                start.setEnabled(false);
+                start.setVisible(false);
+                gameMode.setEnabled(false);
+                gameMode.setVisible(false);
+                modeLabel.setEnabled(false);
+                modeLabel.setVisible(false);
 
-                    //label = new JLabel("<html>Choose what element<br>you want to add:</html>");
-                    label.setBounds(20, 20, 200, 40);
-                    label.setText("<html>Choose what element<br>you want to add:</html>");
-                    editorFrame.getContentPane().add(label);
+                editorFrame.getContentPane().remove(dimension);
+                editorFrame.repaint();
 
-                    cancel.setBounds(10, 250, 100, 40);
-                    editorFrame.getContentPane().add(cancel);
+                label.setBounds(20, 20, 200, 40);
+                label.setText("<html>Choose what element<br>you want to add:</html>");
+                editorFrame.getContentPane().add(label);
 
-                    empty = new JRadioButton("Empty Space");
-                    empty.setBounds(10, 70, 200, 20);
-                    editorFrame.getContentPane().add(empty);
+                cancel.setBounds(10, 250, 100, 40);
+                editorFrame.getContentPane().add(cancel);
 
-                    wall = new JRadioButton("Wall");
-                    wall.setSelected(true);
-                    wall.setBounds(10, 90, 100, 20);
-                    editorFrame.getContentPane().add(wall);
+                empty = new JRadioButton("Empty Space");
+                empty.setBounds(10, 70, 200, 20);
+                editorFrame.getContentPane().add(empty);
 
-                    exit = new JRadioButton("Exit");
-                    exit.setBounds(10, 110, 100, 20);
-                    editorFrame.getContentPane().add(exit);
+                wall = new JRadioButton("Wall");
+                wall.setSelected(true);
+                wall.setBounds(10, 90, 100, 20);
+                editorFrame.getContentPane().add(wall);
 
-                    hero = new JRadioButton("Hero");
-                    hero.setBounds(10, 130, 100, 20);
-                    editorFrame.getContentPane().add(hero);
+                exit = new JRadioButton("Exit");
+                exit.setBounds(10, 110, 100, 20);
+                editorFrame.getContentPane().add(exit);
 
-                    dragon = new JRadioButton("Dragon");
-                    dragon.setBounds(10, 150, 100, 20);
-                    editorFrame.getContentPane().add(dragon);
+                hero = new JRadioButton("Hero");
+                hero.setBounds(10, 130, 100, 20);
+                editorFrame.getContentPane().add(hero);
 
-                    sword = new JRadioButton("Sword");
-                    sword.setBounds(10, 170, 100, 20);
-                    editorFrame.getContentPane().add(sword);
+                dragon = new JRadioButton("Dragon");
+                dragon.setBounds(10, 150, 100, 20);
+                editorFrame.getContentPane().add(dragon);
 
-                    empty.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent e) {
-                            selected = "Empty";
-                        }
-                    });
+                sword = new JRadioButton("Sword");
+                sword.setBounds(10, 170, 100, 20);
+                editorFrame.getContentPane().add(sword);
 
-                    wall.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent e) {
-                            selected = "Wall";
-                        }
-                    });
+                empty.addItemListener(e -> selected = "Empty");
 
-                    exit.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent e) {
-                            selected = "Exit";
-                        }
-                    });
+                wall.addItemListener(e -> selected = "Wall");
 
-                    hero.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent e) {
-                            selected = "Hero";
-                        }
-                    });
+                exit.addItemListener(e -> selected = "Exit");
 
-                    dragon.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent e) {
-                            selected = "Dragon";
-                        }
-                    });
+                hero.addItemListener(e -> selected = "Hero");
 
-                    sword.addItemListener(new ItemListener() {
-                        public void itemStateChanged(ItemEvent e) {
-                            selected = "Sword";
-                        }
-                    });
+                dragon.addItemListener(e -> selected = "Dragon");
 
-                    ButtonGroup elements = new ButtonGroup();
-                    elements.add(empty);
-                    elements.add(wall);
-                    elements.add(exit);
-                    elements.add(hero);
-                    elements.add(dragon);
-                    elements.add(sword);
+                sword.addItemListener(e -> selected = "Sword");
 
-                    done = new JButton("Done");
-                    done.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            if (hasExit && hasHero && hasSword) {
-                                l.setMaze(maze);
-                                initElements(l);
-                                l.setGamePanel(new Panel());
-                                l.getGamePanel().setBounds(238, 10, 400, 400);
-                                l.getGamePanel().setVisible(true);
-                                l.getGamePanel().setFocusable(true);
+                ButtonGroup elements = new ButtonGroup();
+                elements.add(empty);
+                elements.add(wall);
+                elements.add(exit);
+                elements.add(hero);
+                elements.add(dragon);
+                elements.add(sword);
 
-                                l.getGamePanel().addKeyListener(new KeyListener() {
+                done = new JButton("Done");
+                done.addActionListener(e -> {
+                    if (hasExit && hasHero && hasSword) {
+                        l.setMaze(maze);
+                        initElements(l);
+                        l.setGamePanel(new Panel());
+                        l.getGamePanel().setBounds(238, 10, 400, 400);
+                        l.getGamePanel().setVisible(true);
+                        l.getGamePanel().setFocusable(true);
 
-                                    @Override
-                                    public void keyPressed(KeyEvent e) {
-                                        switch (e.getKeyCode()) {
-                                            case KeyEvent.VK_LEFT:
-                                                l.moveLeft();
-                                                break;
+                        l.getGamePanel().addKeyListener(new KeyListener() {
 
-                                            case KeyEvent.VK_RIGHT:
-                                                l.moveRight();
-                                                break;
+                            @Override
+                            public void keyPressed(KeyEvent e) {
+                                switch (e.getKeyCode()) {
+                                    case KeyEvent.VK_LEFT:
+                                        l.moveLeft();
+                                        break;
 
-                                            case KeyEvent.VK_UP:
-                                                l.moveUp();
-                                                break;
+                                    case KeyEvent.VK_RIGHT:
+                                        l.moveRight();
+                                        break;
 
-                                            case KeyEvent.VK_DOWN:
-                                                l.moveDown();
-                                                break;
-                                            case KeyEvent.VK_ESCAPE:
-                                                System.exit(0);
-                                                break;
-                                        }
-                                    }
+                                    case KeyEvent.VK_UP:
+                                        l.moveUp();
+                                        break;
 
-                                    @Override
-                                    public void keyReleased(KeyEvent e) {
-                                    }
-
-                                    @Override
-                                    public void keyTyped(KeyEvent e) {
-                                    }
-
-                                });
-
-                                l.getFrmLabirinto().getContentPane().add(l.getGamePanel());
-                                l.getGamePanel().requestFocus();
-
-                                l.convGameMode((String) gameMode.getSelectedItem());
-
-                                l.getLeftButton().setEnabled(true);
-                                l.getDownButton().setEnabled(true);
-                                l.getRightButton().setEnabled(true);
-                                l.getUpButton().setEnabled(true);
-
-                                ((Panel) l.getGamePanel()).setMaze(maze.getFullMaze());
-                                l.getGamePanel().repaint();
-                                editorFrame.dispose();
-                            } else {
-                                JOptionPane.showMessageDialog(editorFrame, "The maze must have exactly one exit, one sword and one hero");
+                                    case KeyEvent.VK_DOWN:
+                                        l.moveDown();
+                                        break;
+                                    case KeyEvent.VK_ESCAPE:
+                                        System.exit(0);
+                                        break;
+                                }
                             }
-                        }
-                    });
-                    done.setBounds(10, 200, 100, 40);
-                    editorFrame.getContentPane().add(done);
 
-                    gamePanel = new Panel();
-                    gamePanel.setBounds(250, 10, 400, 400);
-                    gamePanel.setVisible(true);
-                    gamePanel.setFocusable(true);
-                    gamePanel.addMouseListener(new MouseListener() {
+                            @Override
+                            public void keyReleased(KeyEvent e) {
+                            }
 
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            int cell = 400 / maze.getSize();//57
-                            int i = e.getX() / cell;
-                            int j = e.getY() / cell;
+                            @Override
+                            public void keyTyped(KeyEvent e) {
+                            }
+                        });
 
-                            if (i < maze.getSize() - 1 && i > 0 && j < maze.getSize() - 1 && j > 0) {
-                                switch (selected) {
-                                    case "Wall":
-                                        if (hasHero && maze.getMaze(j, i) == 'H') {
-                                            hasHero = false;
+                        l.getLabirintoFrame().getContentPane().add(l.getGamePanel());
+                        l.getGamePanel().requestFocus();
 
-                                        }
-                                        if (hasSword && maze.getMaze(j, i) == 'E') {
-                                            hasSword = false;
-                                        }
-                                        maze.setMaze(j, i, 'X');
-                                        break;
-                                    case "Empty":
-                                        if (hasHero && maze.getMaze(j, i) == 'H') {
-                                            hasHero = false;
+                        l.convGameMode((String) gameMode.getSelectedItem());
 
-                                        }
-                                        if (hasSword && maze.getMaze(j, i) == 'E') {
-                                            hasSword = false;
-                                        }
-                                        maze.setMaze(j, i, ' ');
-                                        break;
-                                    case "Hero":
-                                        if (maze.getMaze(j - 1, i) != 'D'
-                                                && maze.getMaze(j + 1, i) != 'D'
-                                                && maze.getMaze(j, i - 1) != 'D'
-                                                && maze.getMaze(j, i + 1) != 'D') {
-                                            if (!hasHero) {
-                                                if (hasSword && maze.getMaze(j, i) == 'E') {
-                                                    hasSword = false;
-                                                }
-                                                hasHero = true;
-                                                maze.setMaze(j, i, 'H');
-                                            }
-                                        }
-                                        break;
-                                    case "Dragon":
-                                        if (maze.getMaze(j - 1, i) != 'H'
-                                                && maze.getMaze(j + 1, i) != 'H'
-                                                && maze.getMaze(j, i - 1) != 'H'
-                                                && maze.getMaze(j, i + 1) != 'H') {
-                                            if (hasHero && maze.getMaze(j, i) == 'H') {
-                                                hasHero = false;
+                        l.getLeftButton().setEnabled(true);
+                        l.getDownButton().setEnabled(true);
+                        l.getRightButton().setEnabled(true);
+                        l.getUpButton().setEnabled(true);
 
-                                            }
+                        ((Panel) l.getGamePanel()).setMaze(maze.getFullMaze());
+                        l.getGamePanel().repaint();
+                        editorFrame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(editorFrame, "The maze must have exactly one exit, one sword and one hero");
+                    }
+                });
+                done.setBounds(10, 200, 100, 40);
+                editorFrame.getContentPane().add(done);
+
+                gamePanel = new Panel();
+                gamePanel.setBounds(250, 10, 400, 400);
+                gamePanel.setVisible(true);
+                gamePanel.setFocusable(true);
+                gamePanel.addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        int cell = 400 / maze.getSize();//57
+                        int i = e.getX() / cell;
+                        int j = e.getY() / cell;
+
+                        if (i < maze.getSize() - 1 && i > 0 && j < maze.getSize() - 1 && j > 0) {
+                            switch (selected) {
+                                case "Wall":
+                                    if (hasHero && maze.getMaze(j, i) == 'H') {
+                                        hasHero = false;
+
+                                    }
+                                    if (hasSword && maze.getMaze(j, i) == 'E') {
+                                        hasSword = false;
+                                    }
+                                    maze.setMaze(j, i, 'X');
+                                    break;
+                                case "Empty":
+                                    if (hasHero && maze.getMaze(j, i) == 'H') {
+                                        hasHero = false;
+
+                                    }
+                                    if (hasSword && maze.getMaze(j, i) == 'E') {
+                                        hasSword = false;
+                                    }
+                                    maze.setMaze(j, i, ' ');
+                                    break;
+                                case "Hero":
+                                    if (maze.getMaze(j - 1, i) != 'D'
+                                            && maze.getMaze(j + 1, i) != 'D'
+                                            && maze.getMaze(j, i - 1) != 'D'
+                                            && maze.getMaze(j, i + 1) != 'D') {
+                                        if (!hasHero) {
                                             if (hasSword && maze.getMaze(j, i) == 'E') {
                                                 hasSword = false;
                                             }
-                                            maze.setMaze(j, i, 'D');
+                                            hasHero = true;
+                                            maze.setMaze(j, i, 'H');
+                                        }
+                                    }
+                                    break;
+                                case "Dragon":
+                                    if (maze.getMaze(j - 1, i) != 'H'
+                                            && maze.getMaze(j + 1, i) != 'H'
+                                            && maze.getMaze(j, i - 1) != 'H'
+                                            && maze.getMaze(j, i + 1) != 'H') {
+                                        if (hasHero && maze.getMaze(j, i) == 'H') {
+                                            hasHero = false;
+
+                                        }
+                                        if (hasSword && maze.getMaze(j, i) == 'E') {
+                                            hasSword = false;
+                                        }
+                                        maze.setMaze(j, i, 'D');
+                                    }
+                                    break;
+                                case "Sword":
+                                    if (!hasSword) {
+                                        if (hasHero && maze.getMaze(j, i) == 'H') {
+                                            hasHero = false;
+                                        }
+                                        hasSword = true;
+                                        maze.setMaze(j, i, 'E');
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else if (i == 0 || i == maze.getSize() - 1 || j == 0 || j == maze.getSize() - 1) {
+                            if (!((i == 0 && j == 0) || (i == maze.getSize() - 1 && j == maze.getSize() - 1) || (i == 0 && j == maze.getSize() - 1) || (i == maze.getSize() - 1 && j == 0))) {
+                                switch (selected) {
+                                    case "Wall":
+                                        if (hasExit && maze.getMaze(j, i) == 'S') {
+                                            hasExit = false;
+                                            maze.setMaze(j, i, 'X');
                                         }
                                         break;
-                                    case "Sword":
-                                        if (!hasSword) {
-                                            if (hasHero && maze.getMaze(j, i) == 'H') {
-                                                hasHero = false;
-                                            }
-                                            hasSword = true;
-                                            maze.setMaze(j, i, 'E');
+                                    case "Exit":
+                                        if (!hasExit) {
+                                            hasExit = true;
+                                            maze.setMaze(j, i, 'S');
                                         }
                                         break;
                                     default:
                                         break;
                                 }
-                            } else if (i == 0 || i == maze.getSize() - 1 || j == 0 || j == maze.getSize() - 1) {
-                                if ((i == 0 && j == 0) || (i == maze.getSize() - 1 && j == maze.getSize() - 1)
-                                        || (i == 0 && j == maze.getSize() - 1) || (i == maze.getSize() - 1 && j == 0)) {
-                                } else {
-                                    switch (selected) {
-                                        case "Wall":
-                                            if (hasExit && maze.getMaze(j, i) == 'S') {
-                                                hasExit = false;
-                                                maze.setMaze(j, i, 'X');
-                                            }
-                                            break;
-                                        case "Exit":
-                                            if (!hasExit) {
-                                                hasExit = true;
-                                                maze.setMaze(j, i, 'S');
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
                             }
-
-                            gamePanel.repaint();
-
                         }
 
-                        @Override
-                        public void mouseEntered(MouseEvent arg0) {
-                        }
+                        gamePanel.repaint();
 
-                        @Override
-                        public void mouseExited(MouseEvent arg0) {
-                        }
+                    }
 
-                        @Override
-                        public void mousePressed(MouseEvent arg0) {
-                        }
+                    @Override
+                    public void mouseEntered(MouseEvent arg0) {
+                    }
 
-                        @Override
-                        public void mouseReleased(MouseEvent arg0) {
-                        }
+                    @Override
+                    public void mouseExited(MouseEvent arg0) {
+                    }
 
-                    });
+                    @Override
+                    public void mousePressed(MouseEvent arg0) {
+                    }
 
-                    editorFrame.getContentPane().add(gamePanel);
-                    gamePanel.requestFocus();
+                    @Override
+                    public void mouseReleased(MouseEvent arg0) {
+                    }
 
-                    ((Panel) gamePanel).setMaze(maze.getFullMaze());
-                } catch (NumberFormatException e1) {
-                    e1.printStackTrace();
-                }
+                });
+
+                editorFrame.getContentPane().add(gamePanel);
+                gamePanel.requestFocus();
+
+                ((Panel) gamePanel).setMaze(maze.getFullMaze());
+            } catch (NumberFormatException e1) {
+                e1.printStackTrace();
             }
-
         });
         start.setBounds(10, 227, 89, 23);
         editorFrame.getContentPane().add(start);
@@ -400,8 +376,8 @@ public class MazeCreator implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         Object source = evt.getSource();
         //getvalue retorna Object, preciso altera lo
-        if (source == sizeField)
-            mazeSize = ((Number) sizeField.getValue()).intValue();
+        if (source == dimension)
+            mazeSize = ((Number) dimension.getValue()).intValue();
     }
 
 }
